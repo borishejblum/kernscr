@@ -1,0 +1,8 @@
+language: R
+r: devel
+cache: packages
+r_packages:
+- survival
+- mvtnorm
+r_build_args: "--html"
+r_check_args: "--as-cran --timings"

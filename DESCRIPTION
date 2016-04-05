@@ -1,0 +1,20 @@
+Package: kernscr
+Type: Package
+Title: Kernel Machine Score Test for Semi-Competing Risks.
+Version: 0.1.0
+Author: c(person("Boris P.", "Hejblum", role = c("aut"),
+    email = "bhejblum@hsph.harvard.edu"),
+    person("Matey", "Neykov", role = c("aut", "cre"),
+    email = ""))
+    person("Jennifer A.", "Sinnot", role = c("aut", "cre"),
+    email = "jsinnott@stat.osu.edu"))
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: More about what it does (maybe more than one line)
+Depends:
+    R (>= 3.0.2)
+Imports:
+    survival,
+    mvtnorm
+License: GPL-2 | file LICENSE
+LazyData: TRUE
+RoxygenNote: 5.0.1
