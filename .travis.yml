@@ -4,5 +4,9 @@ cache: packages
 r_packages:
 - survival
 - mvtnorm
+- MASS
+- gdata
+bioc_packages:
+- org.Hs.eg.db
 r_build_args: "--html"
 r_check_args: "--as-cran --timings"
