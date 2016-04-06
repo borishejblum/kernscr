@@ -5,8 +5,8 @@
 \title{sup_stat_both}
 \usage{
 sup_stat_both(num_perts, Ws = NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
-  l0 = NA, kernel = c("gaussian", "poly"), d = NA, est_gamma = FALSE,
-  pca_thres = NULL)
+  l0 = NA, kernel = c("gaussian", "poly"), est_gamma = FALSE,
+  pca_thres = NULL, ...)
 }
 \arguments{
 \item{num_perts}{number of perturbations used}
@@ -18,6 +18,8 @@ sup_stat_both(num_perts, Ws = NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
 in which case \code{0} value is used for gamma.}
 
 \item{pca_thres}{the threshold to be used for PCA. Default is \code{NULL}, in which case no PCA is performed.}
+
+\item{...}{extra parameters specific to the type of kernel used}
 }
 \value{
 a \code{data.frame}

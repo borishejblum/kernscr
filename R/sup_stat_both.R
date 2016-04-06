@@ -11,17 +11,18 @@
 #'@param l0
 #'@param kernel a character string indicating which kernel should be used. Currently implemented are
 #'\code{"linear"}, \code{"gaussian"} or \code{"poly"}.
-#'@param d
 #'@param est_gamma logical flag indicating whether \code{gamma} should be estimated. Default is \code{FALSE},
 #'in which case \code{0} value is used for gamma.
 #'@param pca_thres the threshold to be used for PCA. Default is \code{NULL}, in which case no PCA is performed.
+#'@param ... extra parameters specific to the type of kernel used
+#'
 #'
 #'
 #'@return a \code{data.frame}
 #'
 #'@export
 sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
-                          l0 = NA, kernel = c("gaussian", "poly"), d = NA, est_gamma=FALSE, pca_thres=NULL){
+                          l0 = NA, kernel = c("gaussian", "poly"), est_gamma=FALSE, pca_thres=NULL, ...){
 
   if(is.null(Ws[1])){
     Ws <- rnorm(dim(data)[1]*num_perts)
