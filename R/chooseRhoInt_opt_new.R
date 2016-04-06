@@ -1,12 +1,12 @@
 ## choose rho in the range such that the eigenvalue decay rate is between 1.1 and 2.2 ##
 ## 1.1 to 4
-chooseRhoInt_opt_new <- function(Z, rho, rho0, l0 = NA, kernel = c("gaussian", "poly"), d = NA, rate.range=c(1.5,4)){
+chooseRhoInt_opt_new <- function(Z, rho, rho0, l0 = NA, kernel = c("gaussian", "poly"), d = NA, rate_range=c(1.5,4)){
   n <- nrow(Z)
   if (kernel == "gaussian"){
-    G <- gaussKernelEval.multipleSigmas(Z, sigma = rho)
+    G <- gaussKernelEval_multipleSigmas(Z, sigma = rho)
   }
   if (kernel == "poly"){
-    G <- polyKernelEval.multipleSigmas(Z, a = rho, d = d)
+    G <- polyKernelEval_multiple(Z, a = rho, d = d)
   }
 
   slope_eigen <- function(ind, G. = G, Z. = Z, rho0. = rho0){
@@ -27,6 +27,6 @@ chooseRhoInt_opt_new <- function(Z, rho, rho0, l0 = NA, kernel = c("gaussian", "
   print(slope_vec)
 
   rho <- slope_vec[,"rho"] ## changed
-  res_rho_opt <- c(max(c(min(rho),slope_vec[slope_vec[,"slope"]<=rate.range[1],"rho"])),min(c(max(rho), slope_vec[slope_vec[,"slope"]>=rate.range[2],"rho"]))) ## changed
+  res_rho_opt <- c(max(c(min(rho),slope_vec[slope_vec[,"slope"]<=rate_range[1],"rho"])),min(c(max(rho), slope_vec[slope_vec[,"slope"]>=rate_range[2],"rho"]))) ## changed
   return(res_rho_opt)
 }

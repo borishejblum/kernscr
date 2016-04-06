@@ -85,13 +85,13 @@ sapply(cancer_pathways, function(x){length(intersect(x, rownames(BC.dat.exp)))/l
 
 }
 \references{
-MJ van de Vijver,YD He, LJ van’t Veer, H Dai, AAM Hart, DW Voskuil,
+MJ van de Vijver,YD He, LJ van't Veer, H Dai, AAM Hart, DW Voskuil,
 A gene-expression signature as a predictor of survival in breast cancer,
 \emph{The New England Journal of Medicine}, 347(25):1999-2009, 2002.
 
 T Cai, G Tonini, X Lin, Kernel Machine Approach to Testing the
 Significance of Multiple Genetic Markers for Risk Prediction, \emph{Biometrics},
-67(3):975-986
+67(3):975-986, 2011.
 }
 \keyword{datasets}
 

@@ -51,40 +51,40 @@ feat.square.neg <- function(X){
 #'@rdname generate_dataset_advanced
 #'@keywords internal
 #'@export
-generate_dataset_advanced <- function(with.feat = F, data.size = 100, ncol.gene.mat = 100, feat.m = NA, feat.d = NA, mu.cen = 1.3,
-                                      gamma1 = c(0,0),gamma2 = c(0,0),lam.m = 1/15, lam.d = 1/20, norm.vcov = c(1,.5,.5,1), cov = 0){
+generate_dataset_advanced <- function(with_feat = F, data_size = 100, ncol_gene_mat = 100, feat_m = NA, feat_d = NA, mu_cen = 1.3,
+                                      gamma1 = c(0,0),gamma2 = c(0,0),lam_m = 1/15, lam_d = 1/20, norm_vcov = c(1,.5,.5,1), cov = 0){
   # the models will be generated in the following way
   # log(Tm) = -log(small.lambda0) + gamma_1'X + h(Z) + eps_1
   # log(Td) = -log(small.lambda0) + gamma_2'X + h(Z) + eps_2
   # Td should always be greater than Tm
 
   # the Zs
-  #Zgen <- rnorm(data.size*ncol.gene.mat)#.3*rnorm(10000) + .7*rcauchy(10000)
-  #Zgen.mat <- matrix(Zgen, data.size, ncol.gene.mat)
-  S <- matrix(cov, ncol.gene.mat, ncol.gene.mat);   diag(S) <- 1
-  Zgen.mat <- mvtnorm::rmvnorm(data.size, sigma = S)
+  #Zgen <- rnorm(data_size*ncol_gene_mat)#.3*rnorm(10000) + .7*rcauchy(10000)
+  #Zgen_mat <- matrix(Zgen, data_size, ncol_gene_mat)
+  S <- matrix(cov, ncol_gene_mat, ncol_gene_mat);   diag(S) <- 1
+  Zgen_mat <- mvtnorm::rmvnorm(data_size, sigma = S)
 
   # the X
-  BMI <- rnorm(data.size, 21.7, 2.56)
+  BMI <- rnorm(data_size, 21.7, 2.56)
   # distance between eyes in cm (haha!)
-  DBE <- rnorm(data.size,5,1)
+  DBE <- rnorm(data_size,5,1)
 
-  eps <- mvtnorm::rmvnorm(n=data.size,mean=c(0,0),sigma=matrix(norm.vcov,2,2))
+  eps <- mvtnorm::rmvnorm(n=data_size,mean=c(0,0),sigma=matrix(norm_vcov,2,2))
 
   eps <- log(-log(pnorm(eps)))
 
-  if (with.feat == F){
-    Tm <- exp(-log(lam.m) - gamma1%*%rbind(BMI, DBE) + eps[,1])
-    Td <- exp(-log(lam.d) - gamma2%*%rbind(BMI, DBE) + eps[,2])
+  if (with_feat == F){
+    Tm <- exp(-log(lam_m) - gamma1%*%rbind(BMI, DBE) + eps[,1])
+    Td <- exp(-log(lam_d) - gamma2%*%rbind(BMI, DBE) + eps[,2])
   }
   else{
-    Tm <- exp(-log(lam.m) - gamma1%*%rbind(BMI, DBE) + feat.m(Zgen.mat) + eps[,1])
-    Td <- exp(-log(lam.d) - gamma2%*%rbind(BMI, DBE) + feat.d(Zgen.mat) + eps[,2])
+    Tm <- exp(-log(lam_m) - gamma1%*%rbind(BMI, DBE) + feat_m(Zgen_mat) + eps[,1])
+    Td <- exp(-log(lam_d) - gamma2%*%rbind(BMI, DBE) + feat_d(Zgen_mat) + eps[,2])
   }
 
   ## not sure if this is not violating the independent censoring assumption
   ## just exponential with fixed mean
-  Tc <- rexp(data.size, 1/mu.cen)
+  Tc <- rexp(data_size, 1/mu_cen)
   Tmat1 <- cbind(as.vector(Tc), as.vector(Tm), as.vector(Td))
   Tmin1 <- apply(Tmat1, 1, min)
   # sets up the right time, having in mind the coding in the write up
@@ -100,7 +100,7 @@ generate_dataset_advanced <- function(with.feat = F, data.size = 100, ncol.gene.
   ## an event if min(Tm, Td) <= Tc; which is exactly what other people do in this situation
 
   # this gives a data frame
-  data <- data.frame(Tmin1, Tmin2, delta1, delta2, Zgen.mat, BMI, DBE, Tmin1, (delta1 != 0))
+  data <- data.frame(Tmin1, Tmin2, delta1, delta2, Zgen_mat, BMI, DBE, Tmin1, (delta1 != 0))
 
   return(data)
 }

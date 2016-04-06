@@ -2,12 +2,12 @@
 % Please edit documentation in R/kerneval.R
 \name{kernelEval}
 \alias{gaussKernelEval}
-\alias{gaussKernelEval.multipleSigmas}
+\alias{gaussKernelEval_multipleSigmas}
 \alias{genericKernelEval}
 \alias{kernelEval}
 \alias{linKernelEval}
 \alias{polyKernelEval}
-\alias{polyKernelEval.multiple}
+\alias{polyKernelEval_multiple}
 \title{Evaluation of kernels}
 \usage{
 kernelEval(Z, K = c("linear", "poly", "gaussian"), ...)
@@ -16,11 +16,11 @@ linKernelEval(Z)
 
 gaussKernelEval(Z, sigma = 1)
 
-gaussKernelEval.multipleSigmas(Z, sigma = 1)
+gaussKernelEval_multipleSigmas(Z, sigma = 1)
 
 polyKernelEval(Z, a = 0, d = 1)
 
-polyKernelEval.multiple(Z, a = 0, d = 1)
+polyKernelEval_multiple(Z, a = 0, d = 1)
 
 genericKernelEval(Z, K, ...)
 }

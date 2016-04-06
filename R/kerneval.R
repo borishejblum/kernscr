@@ -60,7 +60,8 @@ gaussKernelEval <- function(Z, sigma = 1){
 
 #'@rdname kernelEval
 #'@keywords internal
-gaussKernelEval.multipleSigmas <- function(Z, sigma = 1){
+#'@export
+gaussKernelEval_multipleSigmas <- function(Z, sigma = 1){
   Z <- as.matrix(Z) # this is the size Gram matrix
   m <- ncol(Z)
 
@@ -87,7 +88,8 @@ polyKernelEval <- function(Z, a = 0, d = 1){
 
 #'@rdname kernelEval
 #'@keywords internal
-polyKernelEval.multiple <- function(Z, a = 0, d = 1){
+#'@export
+polyKernelEval_multiple <- function(Z, a = 0, d = 1){
   Z <- as.matrix(Z)# this is the size Gram matrix
   m <- ncol(Z)
   return((matrix(as.vector(t(Z)%*%Z) + rep(a,rep(m*m,length(a))), ncol = m*m, byrow = T))^d)

@@ -22,10 +22,10 @@ feat.square(X)
 
 feat.square.neg(X)
 
-generate_dataset_advanced(with.feat = F, data.size = 100,
-  ncol.gene.mat = 100, feat.m = NA, feat.d = NA, mu.cen = 1.3,
-  gamma1 = c(0, 0), gamma2 = c(0, 0), lam.m = 1/15, lam.d = 1/20,
-  norm.vcov = c(1, 0.5, 0.5, 1), cov = 0)
+generate_dataset_advanced(with_feat = F, data_size = 100,
+  ncol_gene_mat = 100, feat_m = NA, feat_d = NA, mu_cen = 1.3,
+  gamma1 = c(0, 0), gamma2 = c(0, 0), lam_m = 1/15, lam_d = 1/20,
+  norm_vcov = c(1, 0.5, 0.5, 1), cov = 0)
 }
 \arguments{
 \item{X}{a matrix}

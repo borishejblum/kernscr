@@ -4,13 +4,13 @@
 #'@rdname cancer_pathways
 #'@aliases cancer_pathways
 #'
-#'@references MJ van de Vijver,YD He, LJ van’t Veer, H Dai, AAM Hart, DW Voskuil,
+#'@references MJ van de Vijver,YD He, LJ van't Veer, H Dai, AAM Hart, DW Voskuil,
 #'A gene-expression signature as a predictor of survival in breast cancer,
 #'\emph{The New England Journal of Medicine}, 347(25):1999-2009, 2002.
 #'
 #'@references T Cai, G Tonini, X Lin, Kernel Machine Approach to Testing the
 #'Significance of Multiple Genetic Markers for Risk Prediction, \emph{Biometrics},
-#'67(3):975-986
+#'67(3):975-986, 2011.
 #'
 #'@format a list of 70 relevant pathways from an old version of MSigDB c2CP contening the Entrez IDs.
 #'
