@@ -5,11 +5,21 @@
 \title{sup_stat_both}
 \usage{
 sup_stat_both(num_perts, Ws = NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
-  l0 = NA, kernel = c("gaussian", "poly"), est_gamma = FALSE,
-  pca_thres = NULL, ...)
+  kernel = c("gaussian", "poly"), est_gamma = FALSE, pca_thres = NULL,
+  d = NA, l0 = NA, ...)
 }
 \arguments{
 \item{num_perts}{number of perturbations used}
+
+\item{data}{a \code{n x p} matrix:\itemize{
+\item{-}{columns \code{1:2} contain the survival times for the 2 competing risks respectively.}
+\item{-}{columns \code{3:4} contain the boolean censorship indicators for the 2 competing risks respectively.}
+\item{-}{columns \code{5:p} contain the gene expressions for the \code{p-5} genes measured.}
+}}
+
+\item{set_U}{a vector of column index subset of \code{\{5:p\}} indicating which genes are in the tested pathway}
+
+\item{rho}{Default is \code{1:40}.}
 
 \item{kernel}{a character string indicating which kernel should be used. Currently implemented are
 \code{"linear"}, \code{"gaussian"} or \code{"poly"}.}
@@ -19,12 +29,16 @@ in which case \code{0} value is used for gamma.}
 
 \item{pca_thres}{the threshold to be used for PCA. Default is \code{NULL}, in which case no PCA is performed.}
 
+\item{d}{degree of the polynomial for the \code{"poly"}.}
+
+\item{l0}{not implemented.}
+
 \item{...}{extra parameters specific to the type of kernel used}
 }
 \value{
 a \code{data.frame}
 }
 \description{
-sup_stat_both
+Computes for cause specific Dc and Mc, and for Marginal death Dm
 }
 

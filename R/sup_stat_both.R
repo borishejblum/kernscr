@@ -1,19 +1,24 @@
 #'sup_stat_both
 #'
-#'sup_stat_both
+#'Computes for cause specific Dc and Mc, and for Marginal death Dm
 #'
 #'@param num_perts number of perturbations used
 #'@param Ws
-#'@param data
-#'@param set_U
+#'@param data a \code{n x p} matrix:\itemize{
+#'\item{-}{columns \code{1:2} contain the survival times for the 2 competing risks respectively.}
+#'\item{-}{columns \code{3:4} contain the boolean censorship indicators for the 2 competing risks respectively.}
+#'\item{-}{columns \code{5:p} contain the gene expressions for the \code{p-5} genes measured.}
+#'}
+#'@param set_U a vector of column index subset of \code{\{5:p\}} indicating which genes are in the tested pathway
 #'@param Cov_e_M_e_D
-#'@parma rho Default is \code{1:40}.
-#'@param l0
+#'@param rho Default is \code{1:40}.
 #'@param kernel a character string indicating which kernel should be used. Currently implemented are
 #'\code{"linear"}, \code{"gaussian"} or \code{"poly"}.
 #'@param est_gamma logical flag indicating whether \code{gamma} should be estimated. Default is \code{FALSE},
 #'in which case \code{0} value is used for gamma.
 #'@param pca_thres the threshold to be used for PCA. Default is \code{NULL}, in which case no PCA is performed.
+#'@param d degree of the polynomial for the \code{"poly"}.
+#'@param l0 not implemented.
 #'@param ... extra parameters specific to the type of kernel used
 #'
 #'
@@ -22,14 +27,16 @@
 #'
 #'@export
 sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
-                          l0 = NA, kernel = c("gaussian", "poly"), est_gamma=FALSE, pca_thres=NULL, ...){
+                          kernel = c("gaussian", "poly"), est_gamma=FALSE, pca_thres=NULL, d=NA, l0 = NA, ...){
 
   if(is.null(Ws[1])){
-    Ws <- rnorm(dim(data)[1]*num_perts)
+    Ws <- rnorm(nrow(data)*num_perts)
   }
   n <- nrow(data)
-  data_M <- data[order(data[,1]),]
-  data_D <- data_M[order(data_M[,2]),]
+  order_time1 <- order(data[,1])
+  data_M <- data[order_time1,] # data ordered by time1
+  orderM_time2 <- order(data_M[,2])
+  data_D <- data_M[orderM_time2,] # data ordered by time2
   p_gene <- ncol(data) - 6
 
   ind.gene = 1:p_gene + 4 ## data_M sorted by X_M (col #1), data_D sorted by X_D (col #2)
@@ -43,8 +50,8 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
   M_Mc <- M_vec(Inf, data_M[,1], 1*(data_M[,3]==1), gamhat_M, as.matrix(data_M[,set_U])) ## cause specific hazard for M
   M_Dc <- M_vec(Inf, data_M[,1], 1*(data_M[,3]==2), gamhat_M, as.matrix(data_M[,set_U])) ## cause specific hazard for D
   M_Dm <- M_vec(Inf, data_D[,2], 1*(data_D[,4]==1), gamhat_D, as.matrix(data_D[,set_U])) ## marginal hazard for D
-  M_Mc <- M_Mc[, order(data_M[,2]), drop = F] ## this ensures that sorting is done according to sorting of data_D (col #2) ##
-  M_Dc <- M_Dc[, order(data_M[,2]), drop = F] ## this ensures that sorting is done according to sorting of data_D (col #2) ##
+  M_Mc <- M_Mc[, orderM_time2, drop = F] ## this ensures that sorting is done according to sorting of data_D (col #2) ##
+  M_Dc <- M_Dc[, orderM_time2, drop = F] ## this ensures that sorting is done according to sorting of data_D (col #2) ##
 
   if(kernel=="linear"){K_rho=kernelEval(t(data_D[,ind.gene]), K = "linear"); K_rho = matrix(K_rho,nrow=1) }
   else if(kernel=="gaussian"){K_rho=gaussKernelEval_multipleSigmas(t(data_D[,ind.gene]), sigma=rho)}
@@ -55,7 +62,7 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
 
   # do PCA
   if(is.null(pca_thres)){
-    warning("Not performing PCA: potential loss of power, especially on finite samples")
+    warning("Not performing PCA: potential loss of power, especially on finite(small) samples")
   }else{
     if(kernel=="linear"){
       K_rho_eig <- eigen(K_rho)
@@ -83,23 +90,45 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
   ## including cause specific hazard for M, D as well as marginal for D ##
   stats.all <- cbind("Mc"=obtain.K_rhos(K_rho, M_Mc), "Dc"=obtain.K_rhos(K_rho, M_Dc), "Dm"=obtain.K_rhos(K_rho, M_Dm))
 
-  Ws.mat <- matrix(Ws, dim(data)[1], num_perts); Ws.mat.M <- Ws.mat[order(data[,1]),]; Ws.mat.D <- Ws.mat[order(data_M[,2]),]
+  Ws.mat <- matrix(Ws, nrow(data), num_perts)
+  Ws.mat.M <- Ws.mat[order_time1,]
+  #Ws.mat.D <- Ws.mat[order(data_M[,2]),]
+  Ws.mat.D <- Ws.mat.M[orderM_time2,]
 
   ### using the new method based on cause-specific hazard model ###
-  M_Mc_pert <- M_vec_pert(Ws.mat.M, Inf, data_M[,1], 1*(data_M[,3]==1), gamhat_M, as.matrix(data_M[,set_U])); ## cause specific for M
-  M_Dc_pert <- M_vec_pert(Ws.mat.M, Inf, data_M[,1], 1*(data_M[,3]==2), gamhat_M, as.matrix(data_M[,set_U])); ## cause specific for D
-  M_Mc_pert <- M_Mc_pert[order(data_M[,2]),]; ## this ensures that sorting is done according to sorting of data_D
-  M_Dc_pert <- M_Dc_pert[order(data_M[,2]),]; ## this ensures that sorting is done according to sorting of data_D
-  M_Dm_pert <- M_vec_pert(Ws.mat.D, Inf, data_D[,2], 1*(data_D[,4]==1), gamhat_D, as.matrix(data_D[,set_U])); ## marginal for D
-  part_1.Mc <- t(M_Mc_pert)%*%t(K_rho); part_1.Dc <- t(M_Dc_pert)%*%t(K_rho); part_1.Dm <- t(M_Dm_pert)%*%t(K_rho)
-  part_2.Mc <- c(t(M_Mc_pert))*c(part_1.Mc); part_2.Dc <- c(t(M_Dc_pert))*c(part_1.Dc); part_2.Dm <- c(t(M_Dm_pert))*c(part_1.Dm)
-  part_3.list <- list("Mc"=matrix(part_2.Mc, ncol = num_perts, byrow = T), ## cause specific M, n*K_rho rows: (1:n), n+(1:n), 2n+(1:n)
-                      "Dc"=matrix(part_2.Dc, ncol = num_perts, byrow = T), ## cause specific D;
-                      "Dm"=matrix(part_2.Dm, ncol = num_perts, byrow = T)) ## marginal D
-  stat_pert_std.list = as.list(1:3); names(stat_pert_std.list) = names(part_3.list); sd.all= NULL
-  for(l in 1:3){tmpres = NULL; for(i in 0:(length(rho) - 1)){tmpres = cbind(tmpres, colSums(part_3.list[[l]][i*n + 1:n,]))}; ## num_perts x n.rho matrix
-  tmp.sd = apply(tmpres,2,sd); stat_pert_std.list[[l]]=as.matrix(tmpres/VTM(tmp.sd,num_perts)); sd.all = cbind(sd.all, tmp.sd)}
-  stats.all_std = stats.all/sd.all; colnames(stats.all_std) = names(part_3.list) ## standardized statistic for Mc, Dc and D ##
+  M_Mc_pert <- M_vec_pert(Ws.mat.M, Inf, data_M[,1], 1*(data_M[,3]==1), gamhat_M, as.matrix(data_M[,set_U])) ## cause specific for M
+  M_Dc_pert <- M_vec_pert(Ws.mat.M, Inf, data_M[,1], 1*(data_M[,3]==2), gamhat_M, as.matrix(data_M[,set_U])) ## cause specific for D
+  M_Mc_pert <- M_Mc_pert[orderM_time2,] ## this ensures that sorting is done according to sorting of data_D
+  M_Dc_pert <- M_Dc_pert[orderM_time2,] ## this ensures that sorting is done according to sorting of data_D
+  M_Dm_pert <- M_vec_pert(Ws.mat.D, Inf, data_D[,2], 1*(data_D[,4]==1), gamhat_D, as.matrix(data_D[,set_U])) ## marginal for D
+
+  part_1.Mc <- t(M_Mc_pert)%*%t(K_rho)
+  part_1.Dc <- t(M_Dc_pert)%*%t(K_rho)
+  part_1.Dm <- t(M_Dm_pert)%*%t(K_rho)
+
+  part_2.Mc <- c(t(M_Mc_pert))*c(part_1.Mc)
+  part_2.Dc <- c(t(M_Dc_pert))*c(part_1.Dc)
+  part_2.Dm <- c(t(M_Dm_pert))*c(part_1.Dm)
+
+  part_3.list <- list("Mc" = matrix(part_2.Mc, ncol = num_perts, byrow = T), ## cause specific M, n*K_rho rows: (1:n), n+(1:n), 2n+(1:n)
+                      "Dc" = matrix(part_2.Dc, ncol = num_perts, byrow = T), ## cause specific D;
+                      "Dm" = matrix(part_2.Dm, ncol = num_perts, byrow = T)) ## marginal D
+
+  stat_pert_std.list <- as.list(1:3)
+  names(stat_pert_std.list) <- names(part_3.list)
+  sd.all <- NULL
+
+  for(l in 1:3){
+    tmpres <- NULL
+    for(i in 0:(length(rho) - 1)){
+      tmpres = cbind(tmpres, colSums(part_3.list[[l]][i*n + 1:n,])) ## num_perts x n.rho matrix
+    }
+  tmp.sd <- apply(tmpres,2,sd)
+  stat_pert_std.list[[l]] <- as.matrix(tmpres/VTM(tmp.sd,num_perts))
+  sd.all <- cbind(sd.all, tmp.sd)
+  }
+  stats.all_std = stats.all/sd.all ## standardized statistic for Mc, Dc and D
+  colnames(stats.all_std) = names(part_3.list)
 
   ## sum over cause M, cause D and marg D, then take max over rho ##
   stats.sum3_std = max(apply(stats.all_std,1,sum))
