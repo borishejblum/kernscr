@@ -5,8 +5,8 @@
 \title{sup_stat_both}
 \usage{
 sup_stat_both(num_perts, Ws = NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
-  kernel = c("gaussian", "poly"), est_gamma = FALSE, pca_thres = NULL,
-  d = NA, l0 = NA, ...)
+  kernel = c("gaussian", "poly", "linear"), est_gamma = FALSE,
+  pca_thres = NULL, d = NA, l0 = NA, ...)
 }
 \arguments{
 \item{num_perts}{number of perturbations used}

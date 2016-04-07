@@ -27,7 +27,7 @@
 #'
 #'@export
 sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
-                          kernel = c("gaussian", "poly"), est_gamma=FALSE, pca_thres=NULL, d=NA, l0 = NA, ...){
+                          kernel = c("gaussian", "poly", "linear"), est_gamma=FALSE, pca_thres=NULL, d=NA, l0 = NA, ...){
 
   if(is.null(Ws[1])){
     Ws <- rnorm(nrow(data)*num_perts)
@@ -53,12 +53,19 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
   M_Mc <- M_Mc[, orderM_time2, drop = F] ## this ensures that sorting is done according to sorting of data_D (col #2) ##
   M_Dc <- M_Dc[, orderM_time2, drop = F] ## this ensures that sorting is done according to sorting of data_D (col #2) ##
 
-  if(kernel=="linear"){K_rho=kernelEval(t(data_D[,ind.gene]), K = "linear"); K_rho = matrix(K_rho,nrow=1) }
-  else if(kernel=="gaussian"){K_rho=gaussKernelEval_multipleSigmas(t(data_D[,ind.gene]), sigma=rho)}
-  else if(kernel=="poly"){K_rho=polyKernelEval_multiple( t(data_D[,ind.gene]), a=rho, d=d)}
+  ##setting up the kernel
+  if(kernel=="linear"){
+    K_rho=kernelEval(t(data_D[,ind.gene]), K = "linear")
+    K_rho = matrix(K_rho,nrow=1)
+  }
+  else if(kernel=="gaussian"){
+    K_rho=gaussKernelEval_multipleSigmas(t(data_D[,ind.gene]), sigma=rho)
+  }
+  else if(kernel=="poly"){
+    K_rho=polyKernelEval_multiple( t(data_D[,ind.gene]), a=rho, d=d)
+  }
   sqrt_ncol_K_rho <- sqrt(ncol(K_rho))
   K_rho <- matrix(c(t(K_rho)), ncol = sqrt_ncol_K_rho, byrow = T)
-  #dim(K_rho)
 
   # do PCA
   if(is.null(pca_thres)){
@@ -82,6 +89,8 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
       K_rho <- K_rho_new
     }
   }
+
+
 
   # returns a function to obtaing the K_rhos for a fixed matrix K_rho of the type above
   obtain.K_rhos <- function(K_rho, M_vec){
