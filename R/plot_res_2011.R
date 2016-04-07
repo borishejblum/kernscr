@@ -1,3 +1,4 @@
+#'@export
 plot_res_2011 <- function(raw_melted, adj_melted, kernel, method,
                           pathway_names=TRUE, title=NULL, lower_threshold=-4){
   range <- seq(70,1)
@@ -72,3 +73,4 @@ plot_res_2011 <- function(raw_melted, adj_melted, kernel, method,
   }
   #mtext(side=1,text="log10 Pvalue",cex=0.9,line=3.5, adj=0.5, at=-5)
 }
+

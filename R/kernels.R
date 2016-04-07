@@ -24,7 +24,7 @@ LinearKernel <- function(x, y, rho = 0){
 }
 
 #'@param a TODO of the polynomial for the \code{PolyKernel}. Default is \code{0}.
-#'@param d degree of the polynomial for the \code{PolyKernel}. Default is \code{2} (QUadratic kernel)
+#'@param d degree of the polynomial for the \code{PolyKernel}. Default is \code{2} (Quadratic kernel)
 #'@keywords internal
 #'@rdname kernels
 #'@name kernels

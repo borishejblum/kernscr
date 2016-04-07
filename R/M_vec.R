@@ -51,7 +51,7 @@ M_vec_pert <- function(perturb_mat, t, all_times, failures, gamma_vec, U){
 
   fail_indexes <- apply(indexes,2,cumsum)
 
-  # the + 1 here of the indexes is added if we ave failures before events refer to the logic above
+  # the + 1 here of the indexes is added if we have failures before events refer to the logic above
   lambdas_of_fail_times_prev <- c(0, lambda(fail_times, all_times, failures, gamma_vec, U))
   prev_s <- as.vector(exp(U%*%gamma_vec))*(lambdas_of_fail_times_prev[(fail_indexes + 1)])
 

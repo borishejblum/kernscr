@@ -25,7 +25,7 @@ Default is 0.}
 
 \item{a}{TODO of the polynomial for the \code{PolyKernel}. Default is \code{0}.}
 
-\item{d}{degree of the polynomial for the \code{PolyKernel}. Default is \code{2} (QUadratic kernel)}
+\item{d}{degree of the polynomial for the \code{PolyKernel}. Default is \code{2} (Quadratic kernel)}
 }
 \description{
 Compute kernel TODO
