@@ -9,7 +9,7 @@ gamma_star <- function(perturb.mat, all_times, failures, gamma_vec, U){
 
 #'@export
 M_vec <- function(t, all_times, failures, gamma_vec, U){
-  res <- c()
+
   # the failure times
   fail_times <- all_times[failures == 1]
 
@@ -24,7 +24,7 @@ M_vec <- function(t, all_times, failures, gamma_vec, U){
   # this returns the max index of the max failure time prior to min(t, all_times[i])
   # here it throw an error if we don't have a single failure!!!
   # should handle that in a more delicate way
-  fail_indexes <- apply(indexes,2,cumsum)
+  fail_indexes <- apply(indexes, 2, cumsum)
 
   # the + 1 here of the indexes is added if we ave failures before events refer to the logic above
   s <- as.vector(exp(U%*%gamma_vec))*(lambdas_of_fail_times[(fail_indexes + 1)])
@@ -37,12 +37,14 @@ M_vec <- function(t, all_times, failures, gamma_vec, U){
 ## the M vector perturbation
 #'@export
 M_vec_pert <- function(perturb_mat, t, all_times, failures, gamma_vec, U){
-  res <- c()
+
   # the failure times
   fail_times <- all_times[failures == 1]
 
   ## comment the last two arguments for log lambda pert
-  lambdas_of_fail_times <- rbind(rep(0, dim(perturb_mat)[2]), lambda_pert(fail_times, perturb_mat, all_times, failures, gamma_vec, U))
+  lambdas_of_fail_times <- rbind(rep(0, ncol(perturb_mat)),
+                                 lambda_pert(t=fail_times, perturb_mat, all_times, failures, gamma_vec, U)
+                                 )
 
   time_mat <- matrix(rep(t, length(all_times)), length(all_times), length(t), byrow = T)
   event_time_mat <- matrix(rep(all_times, length(t)), length(all_times), length(t))

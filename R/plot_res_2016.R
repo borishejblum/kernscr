@@ -1,3 +1,4 @@
+#'@export
 plot_res_2016 <- function(raw_melted, adj_melted, kernel, method, pathway_names=TRUE, title=NULL){
   range <- seq(70,1)
 

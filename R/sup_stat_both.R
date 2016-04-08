@@ -7,9 +7,10 @@
 #'@param data a \code{n x p} matrix:\itemize{
 #'\item{-}{columns \code{1:2} contain the survival times for the 2 competing risks respectively.}
 #'\item{-}{columns \code{3:4} contain the boolean censorship indicators for the 2 competing risks respectively.}
-#'\item{-}{columns \code{5:p} contain the gene expressions for the \code{p-5} genes measured.}
+#'\item{-}{columns \code{5:(p-2)} contain the gene expressions for the \code{p-6} genes measured.}
+#'\item{-}{columns \code{(p-2):} contain TODO}
 #'}
-#'@param set_U a vector of column index subset of \code{\{5:p\}} indicating which genes are in the tested pathway
+#'@param set_U a vector of column index subset of \code{\{5:(p-2)\}} indicating which genes are in the tested pathway
 #'@param Cov_e_M_e_D
 #'@param rho Default is \code{1:40}.
 #'@param kernel a character string indicating which kernel should be used. Currently implemented are
@@ -29,10 +30,12 @@
 sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
                           kernel = c("gaussian", "poly", "linear"), est_gamma=FALSE, pca_thres=NULL, d=NA, l0 = NA, ...){
 
-  if(is.null(Ws[1])){
-    Ws <- rnorm(nrow(data)*num_perts)
-  }
   n <- nrow(data)
+
+  if(is.null(Ws[1])){
+    Ws <- rnorm(n*num_perts)
+  }
+
   order_time1 <- order(data[,1])
   data_M <- data[order_time1,] # data ordered by time1
   orderM_time2 <- order(data_M[,2])
@@ -99,15 +102,16 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
   ## including cause specific hazard for M, D as well as marginal for D ##
   stats.all <- cbind("Mc"=obtain.K_rhos(K_rho, M_Mc), "Dc"=obtain.K_rhos(K_rho, M_Dc), "Dm"=obtain.K_rhos(K_rho, M_Dm))
 
-  Ws.mat <- matrix(Ws, nrow(data), num_perts)
+  Ws.mat <- matrix(Ws, nrow=n, ncol=num_perts)
   Ws.mat.M <- Ws.mat[order_time1,]
-  #Ws.mat.D <- Ws.mat[order(data_M[,2]),]
-  Ws.mat.D <- Ws.mat.M[orderM_time2,]
+  browser()
+  #Ws.mat.D <- Ws.mat[orderM_time2, ] #old
+  Ws.mat.D <- Ws.mat.M[orderM_time2, ] ## this ensures that sorting is done according to sorting of data_D
 
   ### using the new method based on cause-specific hazard model ###
   M_Mc_pert <- M_vec_pert(Ws.mat.M, Inf, data_M[,1], 1*(data_M[,3]==1), gamhat_M, as.matrix(data_M[,set_U])) ## cause specific for M
-  M_Dc_pert <- M_vec_pert(Ws.mat.M, Inf, data_M[,1], 1*(data_M[,3]==2), gamhat_M, as.matrix(data_M[,set_U])) ## cause specific for D
   M_Mc_pert <- M_Mc_pert[orderM_time2,] ## this ensures that sorting is done according to sorting of data_D
+  M_Dc_pert <- M_vec_pert(Ws.mat.M, Inf, data_M[,1], 1*(data_M[,3]==2), gamhat_M, as.matrix(data_M[,set_U])) ## cause specific for D
   M_Dc_pert <- M_Dc_pert[orderM_time2,] ## this ensures that sorting is done according to sorting of data_D
   M_Dm_pert <- M_vec_pert(Ws.mat.D, Inf, data_D[,2], 1*(data_D[,4]==1), gamhat_D, as.matrix(data_D[,set_U])) ## marginal for D
 
@@ -133,15 +137,21 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
       tmpres = cbind(tmpres, colSums(part_3.list[[l]][i*n + 1:n,])) ## num_perts x n.rho matrix
     }
   tmp.sd <- apply(tmpres,2,sd)
-  stat_pert_std.list[[l]] <- as.matrix(tmpres/VTM(tmp.sd,num_perts))
+  stat_pert_std.list[[l]] <- as.matrix(tmpres/VTM(tmp.sd, num_perts))
   sd.all <- cbind(sd.all, tmp.sd)
   }
-  stats.all_std = stats.all/sd.all ## standardized statistic for Mc, Dc and D
-  colnames(stats.all_std) = names(part_3.list)
+  stats.all_std <-  stats.all/sd.all ## standardized statistic for Mc, Dc and D
+  colnames(stats.all_std) <-  names(part_3.list)
+
 
   ## sum over cause M, cause D and marg D, then take max over rho ##
   stats.sum3_std = max(apply(stats.all_std,1,sum))
-  perts_sum3_std = apply(stat_pert_std.list[["Mc"]]+stat_pert_std.list[["Dc"]]+stat_pert_std.list[["Dm"]],1,max)
+  perts_sum3_std = apply(stat_pert_std.list[["Mc"]] + stat_pert_std.list[["Dc"]] + stat_pert_std.list[["Dm"]], 1, max)
+  pvals_sum3_std = mean(perts_sum3_std > stats.sum3_std)
+
+  ## sum over cause M, cause D and marg D, then take max over rho ##
+  stats.sum3_std = max(apply(stats.all_std,1,sum))
+  perts_sum3_std = apply(stat_pert_std.list[["Mc"]] + stat_pert_std.list[["Dc"]] + stat_pert_std.list[["Dm"]], 1, max)
   pvals_sum3_std = mean(perts_sum3_std > stats.sum3_std)
   ## max over rho, then over cause M, cause D and marg D ##
   stats.max3_std = max(apply(stats.all_std,2,max)) ## maximum statistic across rho and then outcome
@@ -155,9 +165,10 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
   stats.McDc_std = max(apply(stats.all_std[,c("Mc","Dc"),drop=F],1,sum))
   perts_McDc_std = apply(stat_pert_std.list[["Mc"]]+stat_pert_std.list[["Dc"]],1,max)
   pvals_McDc_std = mean(perts_McDc_std > stats.McDc_std)
-  ## sum over cause M and cause D then take max over rho (check how much additional info gained by marg D) ##
-  stats.McDM_std = max(apply(stats.all_std[,c("Mc","Dm"),drop=F],1,sum))
-  perts_McDM_std = apply(stat_pert_std.list[["Mc"]]+stat_pert_std.list[["Dm"]],1,max)
+  ## sum over cause M and marginal D then take max over rho (check how much additional info gained by marg D) ##
+  browser()
+  stats.McDM_std = max(rowSums(stats.all_std[, c("Mc","Dm"), drop=F]))
+  perts_McDM_std = apply(stat_pert_std.list[["Mc"]] + stat_pert_std.list[["Dm"]],1,max)
   pvals_McDM_std = mean(perts_McDM_std > stats.McDM_std)
   ## take the maximum statistic across rho for each of the outcome, cause M, cause D and marg D
   stats.max_std = apply(stats.all_std,2,max) ## maximum statistic across rho
@@ -232,7 +243,7 @@ sup_stat_both <- function(num_perts, Ws=NULL, data, set_U, Cov_e_M_e_D, rho = 1:
                  "McDm" = pvals_McDM_std,
                  "max3" = pvals_max3_std,
                  "max.McDc" = pvals_max2_std,
-                 pvals_max_std, #TODO
+                 pvals_max_std,
                  "PFS" = pval_min)
 
   res_pertbs <- cbind.data.frame("sum3" =  1 - rank(perts_sum3_std)/num_perts,

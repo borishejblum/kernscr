@@ -3,7 +3,8 @@
 # library(mvtnorm)
 # library(MASS)
 # library(reshape2)
-# source("~/Dropbox/HSPH/Kernel Score Test-Matey/Code/BorisCode/FUN_kernel_Boris.R")
+# library(kernscr)
+# #source("~/Dropbox/HSPH/Kernel Score Test-Matey/Code/BorisCode/FUN_kernel_Boris.R")
 # setwd("~/Dropbox/HSPH/Kernel Score Test-Matey/Code/BorisCode/BreastCancer/")
 #
 # #loading data
@@ -16,7 +17,7 @@
 # #processing/preparing data
 # BC.dat.clin <- get("clin.data")
 # BC.dat.exp <- get("llid_norm.mat")
-# PCA.percent <- 0.9
+# PCA_percent <- 0.9
 # pvalue.all.Lin <- NULL
 # pvalue.all.Gau <- NULL
 # sup.hat.Gau <- NULL
@@ -84,7 +85,7 @@
 #       #rho.max <- round(p.gene*2*sum(apply(mydata[,1:p.gene+4], 2, sd))) #old version before Jen change
 #       rho.max <- 200 #new version after Jen change
 #       #rho.set <- chooseRhoInt.opt.new(t(mydata[,1:p.gene+4]), rho=seq(1, rho.max, by=2), rho0=.95, l0=NA, kernel=mykern, d=2) #old version before Jen change
-#       rho.set_temp <- chooseRhoInt.opt.new(t(mydata[,1:p.gene+4]), rho=seq(1, rho.max, by=2), rho0=PCA.percent, l0=NA, kernel=mykern, d=2) #new version after Jen change
+#       rho.set_temp <- chooseRhoInt_opt_new(t(mydata[,1:p.gene+4]), rho=seq(1, rho.max, by=2), rho0=PCA_percent, l0=NA, kernel=mykern, d=2) #new version after Jen change
 #       #e <- try(rho.set <- seq(rho.set[1], 1, length=20)) #old version before Jen change
 #       e <- try(rho.set <-  exp(seq(log(rho.set_temp[1]),log(rho.set_temp[2]), length=30))) #new version after Jen change
 #       if(class(e)=="try-error"){
@@ -95,15 +96,15 @@
 #       rho.set = 1
 #     }
 #
-#     tmpout <- sup.stat.both_boris(num.perts=B0, data=mydata, set.U=(5:(ncol(mydata)-2)),
-#                                   Cov.e.M.e.D=0, rho=rho.set, l0=NA, kernel=mykern, d=2,
-#                                   est.gamma=FALSE, pca.thres=PCA.percent)
+#     tmpout <- sup_stat_both(num_perts=B0, data=mydata, set_U=(5:(ncol(mydata)-2)),
+#                                   Cov_e_M_e_D=0, rho=rho.set, l0=NA, kernel=mykern, d=2,
+#                                   est.gamma=FALSE, pca_thres=PCA_percent)
 #
 #     pvals_out <- c(tmpout[["raw_pvals"]], mykern, ip, nm.pathway[ip])
-#     write(pvals_out, file="raw_pvals_CaiToniniLin.txt", append=TRUE, ncol=500)
+#     write(pvals_out, file="raw_pvals_CaiToniniLin_newrho_correctpertDm.txt", append=TRUE, ncol=500)
 #
-#     pertb_nullpvals_out <- cbind(round(tmpout[["null_pvals_pertbs"]],16), rep(mykern, B0), rep(ip, B0), rep(nm.pathway[ip], B0))
-#     write.table(pertb_nullpvals_out, file="pertb_nullpvals_CaiToniniLin_newrho.txt", append=TRUE,
+#     pertb_nullpvals_out <- cbind(round(tmpout[["null_pvals_pertbs"]], 16), rep(mykern, B0), rep(ip, B0), rep(nm.pathway[ip], B0))
+#     write.table(pertb_nullpvals_out, file="pertb_nullpvals_CaiToniniLin_newrho_correctpertDm.txt", append=TRUE,
 #                 row.names = FALSE, col.names=FALSE, quote=TRUE)
 #
 #     cat(mykern, " ", ip, "/", length(nm.pathway), ":\n", paste(pvals_out, collapse = " "), "\n\n", sep="")
@@ -112,10 +113,10 @@
 #
 #
 #
-# res_raw <- read.table("raw_pvals_CaiToniniLin.txt", quote="\"", comment.char="")
+# res_raw <- read.table("raw_pvals_CaiToniniLin_newrho_correctpertDm.txt", quote="\"", comment.char="")
 # colnames(res_raw) <- c("sum3", "McDc", "McDm", "max3", "max.McDc", "Mc", "Dc", "Dm", "PFS", "kern", "pathway_num", "pathway_name")
 #
-# nullpvals_ptb <- read.table("pertb_nullpvals_CaiToniniLin.txt")
+# nullpvals_ptb <- read.table("pertb_nullpvals_CaiToniniLin_newrho_correctpertDm.txt")
 # colnames(nullpvals_ptb) <- c("sum3", "McDc", "McDm", "max3", "max.McDc", "Mc", "Dc", "Dm", "PFS", "kern", "pathway_num", "pathway_name")
 #
 # res_adj <- res_raw
@@ -123,7 +124,7 @@
 #   for (mykern in kern2test){
 #     null_pv_temp <- nullpvals_ptb[(nullpvals_ptb$kern==mykern),c(i, ncol(res_raw)-2:0)]
 #     colnames(null_pv_temp)[1] <- "pval"
-#     null_pv_temp <- cbind.data.frame(null_pv_temp, "ptb_num"=paste0("ptb",rep(1:5000, length(nm.pathway))))
+#     null_pv_temp <- cbind.data.frame(null_pv_temp, "ptb_num"=paste0("ptb",rep(1:B0, length(nm.pathway))))
 #     null_pv_temp <- dcast(null_pv_temp, pathway_num + pathway_name + kern ~ptb_num, value.var="pval")
 #     null_pv_temp.min <- apply(1-null_pv_temp[,-c(1:3)], 2, FUN=min)
 #     res_adj[res_adj$kern==mykern,i] <- sapply(res_raw[res_raw$kern==mykern,i], function(p){mean(p > null_pv_temp.min)})
@@ -151,8 +152,8 @@
 # plot_res_2011(raw_melted= res_raw_melted, adj_melted = res_adj_melted, kernel="gaussian", method=c("PFS", "McDm"), title="")
 # dev.off()
 #
-# pdf(file=paste("SCR_PFS_GausskernPCA_2015",".pdf",sep=""),width=9,height=10)
-# plot_res_2015(raw_melted= res_raw_melted, adj_melted = res_adj_melted, kernel="gaussian", method=c("McDm", "PFS"), title="")
+# pdf(file=paste("SCR_PFS_GausskernPCA_correctWs_mat_D",".pdf",sep=""),width=9,height=10)
+# plot_res_2016(raw_melted= res_raw_melted, adj_melted = res_adj_melted, kernel="gaussian", method=c("McDm", "PFS"), title="")
 # dev.off()
 #
 # adj_temp <- cbind("Dm"=res_adj_melted[res_adj_melted$kern=="gaussian" & res_adj_melted$variable=="Dm", "value"],

@@ -14,10 +14,11 @@ sup_stat_both(num_perts, Ws = NULL, data, set_U, Cov_e_M_e_D, rho = 1:40,
 \item{data}{a \code{n x p} matrix:\itemize{
 \item{-}{columns \code{1:2} contain the survival times for the 2 competing risks respectively.}
 \item{-}{columns \code{3:4} contain the boolean censorship indicators for the 2 competing risks respectively.}
-\item{-}{columns \code{5:p} contain the gene expressions for the \code{p-5} genes measured.}
+\item{-}{columns \code{5:(p-2)} contain the gene expressions for the \code{p-6} genes measured.}
+\item{-}{columns \code{(p-2):} contain TODO}
 }}
 
-\item{set_U}{a vector of column index subset of \code{\{5:p\}} indicating which genes are in the tested pathway}
+\item{set_U}{a vector of column index subset of \code{\{5:(p-2)\}} indicating which genes are in the tested pathway}
 
 \item{rho}{Default is \code{1:40}.}
 

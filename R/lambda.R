@@ -45,7 +45,7 @@ lambda_pert <- function(t, perturb_mat, all_times, failures, gamma_vec, U){
   #res <- matrix(rep(denom_sum_vec, dim(perturb_mat)[2]), length(t)) + perturbated_with_only_needed_obs
 
   # just repeat the lambda vector
-  first_part <- matrix(rep(denom_sum_vec, dim(perturb_mat)[2]), length(t))
+  first_part <- matrix(rep(denom_sum_vec, ncol(perturb_mat)), length(t))
 
   # the sum of SUM(xi_i dM_i(t)/PI_0(t))
   second_part <- perturbated_with_only_needed_obs
