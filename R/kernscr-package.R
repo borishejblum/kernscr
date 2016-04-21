@@ -2,13 +2,14 @@
 #'
 #' Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks
 #'
-#' The main functions of the kernscr package is TODO
+#' The main functions of the kernscr package is \code{\link{compute_all_tests}}
 #'
 #' @docType package
 #'
-#' @references M Neykov, BP Hejblum, JA Sinnot,  Kernel Machine Score Test for
+#' @references Neykov M, Hejblum BP, Sinnot JA,  Kernel Machine Score Test for
 #' Pathway Analysis in the Presence of Semi-Competing Risks, \emph{submitted}, 2016.
 #'
-#' @name kernscr
+#' @name kernscr-package
+#' @aliases kernscr
 #'
 NULL

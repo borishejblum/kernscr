@@ -1,13 +1,6 @@
-#'Compute the original gammas
-#'
+#'M vector and its perturbation
+#'@rdname M_vec
 #'@keywords internal
-#'@export
-gamma_star <- function(perturb.mat, all_times, failures, gamma_vec, U){
-  return(matrix(rep(gamma_vec, dim(perturb.mat)[2]), length(gamma_vec)))
-}
-
-
-#'@export
 M_vec <- function(t, all_times, failures, gamma_vec, U){
 
   # the failure times
@@ -34,8 +27,9 @@ M_vec <- function(t, all_times, failures, gamma_vec, U){
 }
 
 
-## the M vector perturbation
-#'@export
+#'M vector perturbation
+#'@rdname M_vec
+#'@keywords internal
 M_vec_pert <- function(perturb_mat, t, all_times, failures, gamma_vec, U){
 
   # the failure times
@@ -57,16 +51,18 @@ M_vec_pert <- function(perturb_mat, t, all_times, failures, gamma_vec, U){
   lambdas_of_fail_times_prev <- c(0, lambda(fail_times, all_times, failures, gamma_vec, U))
   prev_s <- as.vector(exp(U%*%gamma_vec))*(lambdas_of_fail_times_prev[(fail_indexes + 1)])
 
-  gamma_star <- gamma_star(perturb_mat, all_times, failures, gamma_vec, U)
-  exp_matr <- as.matrix(exp(U%*%gamma_star))
-  s <- exp_matr[rep(1:dim(exp_matr)[1], length(t)),]*(lambdas_of_fail_times[(fail_indexes + 1),])
 
-  ans <- (as.vector(indexes) - s)*perturb_mat[rep(1:dim(perturb_mat)[1], length(t)),]
+  gamma_star <- matrix(rep(gamma_vec, ncol(perturb_mat)), length(gamma_vec)) #Compute the original gammas
+
+  exp_matr <- as.matrix(exp(U%*%gamma_star))
+  s <- exp_matr[rep(1:nrow(exp_matr), length(t)),]*(lambdas_of_fail_times[(fail_indexes + 1), ])
+
+  ans <- (as.vector(indexes) - s)*perturb_mat[rep(1:nrow(perturb_mat), length(t)),]
   perturbed_part_of_M <- s
 
   M_v <- matrix(as.vector(indexes) - prev_s, length(t), length(all_times), byrow = T)
 
-  M_v_pert <- as.vector(t(M_v))*(perturb_mat)[rep(1:dim(perturb_mat)[1], dim(M_v)[1]),]
+  M_v_pert <- as.vector(t(M_v))*(perturb_mat)[rep(1:nrow(perturb_mat), dim(M_v)[1]), ]
 
   ans <- M_v_pert - (perturbed_part_of_M - prev_s)
   return(ans)

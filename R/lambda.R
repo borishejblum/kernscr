@@ -1,8 +1,12 @@
+#'Lambda and its perturbation
+#'
+#'@keywords internal
+#'@rdname lambda
 lambda <- function(t, all_times, failures, gamma_vec, U){
 
   fail_times <- all_times[failures == 1]
 
-  sums_fail_times <- sum_exp_in_risk_set(fail_times, all_times, gamma_vec, U)
+  sums_fail_times <- PI_0(fail_times, all_times, gamma_vec, U)
   denoms <- 1/sums_fail_times
 
   time_mat <- matrix(rep(t, length(fail_times)), length(fail_times), length(t), byrow = T)
@@ -11,11 +15,9 @@ lambda <- function(t, all_times, failures, gamma_vec, U){
   return(t(event_time_mat <= time_mat)%*%denoms)
 }
 
-#' fake lambda pert
-#'
-#' W_{gamma,i} = 0
-#'
-#'@export
+
+#'@keywords internal
+#'@rdname lambda
 lambda_pert <- function(t, perturb_mat, all_times, failures, gamma_vec, U){
   fail <- which(failures == 1)
   fail_times <- all_times[fail]
@@ -35,14 +37,10 @@ lambda_pert <- function(t, perturb_mat, all_times, failures, gamma_vec, U){
 
   fail_times_less_true_false <- (event_time_mat <= time_mat)
 
-  # this is exactly the lambda
+  # this is exactly lambda
   denom_sum_vec <- t(fail_times_less_true_false)%*%(1/precomp_exp_sum)
 
-  # some of the observations are not less than the given time
-  # we are also summing all of the other perturbed sums SUM(xi_i dM_i(t)/PI_0(t))
   perturbated_with_only_needed_obs <- t(fail_times_less_true_false)%*%t(perturbated_mat_across_fail_times)
-
-  #res <- matrix(rep(denom_sum_vec, dim(perturb_mat)[2]), length(t)) + perturbated_with_only_needed_obs
 
   # just repeat the lambda vector
   first_part <- matrix(rep(denom_sum_vec, ncol(perturb_mat)), length(t))
@@ -50,8 +48,10 @@ lambda_pert <- function(t, perturb_mat, all_times, failures, gamma_vec, U){
   # the sum of SUM(xi_i dM_i(t)/PI_0(t))
   second_part <- perturbated_with_only_needed_obs
 
-  ## THE COMPUTATION OF THE THIRD PART
+  # COMPUTATION OF THE THIRD PART
   res <- exp(log(first_part) + (second_part)/(as.vector(denom_sum_vec)))
 
   return(res)
 }
+
+

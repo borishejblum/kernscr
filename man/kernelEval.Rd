@@ -2,50 +2,67 @@
 % Please edit documentation in R/kerneval.R
 \name{kernelEval}
 \alias{gaussKernelEval}
-\alias{gaussKernelEval_multipleSigmas}
+\alias{gaussKernelEval_multipleRhos}
 \alias{genericKernelEval}
 \alias{kernelEval}
 \alias{linKernelEval}
 \alias{polyKernelEval}
-\alias{polyKernelEval_multiple}
+\alias{polyKernelEval_multipleRhos}
 \title{Evaluation of kernels}
 \usage{
-kernelEval(Z, K = c("linear", "poly", "gaussian"), ...)
+kernelEval(tZ, kernel = c("linear", "poly", "gaussian"), ...)
 
-linKernelEval(Z)
+linKernelEval(tZ)
 
-gaussKernelEval(Z, sigma = 1)
+gaussKernelEval(tZ, sigma = 1)
 
-gaussKernelEval_multipleSigmas(Z, sigma = 1)
+polyKernelEval(tZ, a = 0, d = 2)
 
-polyKernelEval(Z, a = 0, d = 1)
+genericKernelEval(tZ, kernel_func, ...)
 
-polyKernelEval_multiple(Z, a = 0, d = 1)
+gaussKernelEval_multipleRhos(tZ, rho)
 
-genericKernelEval(Z, K, ...)
+polyKernelEval_multipleRhos(tZ, rho, d = 2)
 }
 \arguments{
-\item{Z}{\code{p x n} size Gram matrix.}
+\item{tZ}{a \code{P x N} matrix of genomic covariates (i.e., the usual data array Z transposed)}
 
-\item{K}{which kernel is evaluated by \code{kerneval}.Possible values include currently implemented kernels
-designated by a character string \code{"linear"}, \code{"poly"} and \code{"gaussian"}. Otherwise can be a user defined function.}
+\item{kernel}{which kernel is evaluated by \code{kerneval}. Possible values include currently implemented kernels
+designated by a character string \code{"linear"}, \code{"poly"} and \code{"gaussian"}.
+Otherwise can also be a user-defined function (see \code{kernel_func}).}
 
-\item{...}{other arguments to be passed to the kenrel evaluated.}
+\item{...}{other arguments to be passed to be passed to the evaluated kernel function.}
 
-\item{sigma}{sigma variance parameter for the \code{"gaussian"} kernel.}
+\item{sigma}{standard-deviation parameter for the \code{"gaussian"} kernel.}
 
-\item{a}{TODO of the polynomial for the \code{"poly"}. Default is \code{0}.}
+\item{a}{TODO of the polynomial for the \code{"poly"}. Default is \code{0}}
 
-\item{d}{degree of the polynomial for the \code{"poly"}. Default is \code{2} (Quadratic kernel)}
+\item{d}{power of the polynomial.  Default is \code{2} (quadratic kernel).}
+
+\item{kernel_func}{a function, whose first argument should be \code{tZ}}
+
+\item{rho}{either a single rho to evaluate the kernel at, or a vector of rhos}
+}
+\value{
+\code{kernelEval}, \code{linKernelEval}, \code{gaussKernelEval}, and \code{genericKernelEval}
+return an \code{N x N} matrix with entries \code{K(Z[i,], Z[j,])} [persons i,j]
+
+\code{gaussKernelEval_multipleRhos} and \code{polyKernelEval_multipleRhos} return
+a matrix of dimension \code{Q x N^2}, where \code{Q} is the \code{length} of \code{rho},
+each row corresponds to a rho (puns!) to get the actual kernel matrix associated with a particular
+value of rho, if output is \code{G}, take \code{matrix(G[i,], N)}
 }
 \description{
 Evaluation of kernels
 }
 \details{
-\code{kernelEval} kernel eval works only for gaussian, polynomial and linear kernels currently.
-To be implemented for other kernels too...
+\code{kernelEval} works only for gaussian, polynomial and linear kernels currently.
 
 \code{genericKernelEval}
+
+For \code{polyKernelEval_multipleRhos}, one should have \code{rho} > 0 to get
+basis of monomials up to degree \code{d}
 }
 \keyword{internal}
+\keyword{internal#'}
 

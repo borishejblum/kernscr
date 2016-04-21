@@ -1,0 +1,17 @@
+citHeader("To cite kernscr in publications, please use:")
+
+citEntry(entry = "Article",
+   title  = "Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks",
+   author = c(person("Matey Neykov"), person("Boris P Hejblum"), person("Jennifer A. Sinnott")),
+   journal = "submitted",
+   year   = "2016",
+   volume = "",
+   number = "",
+   pages  = "",
+   doi    = "",
+   url    = "",
+   note   = "R package version 1.0.0",
+   textVersion = "Neykov M, Hejblum BP and Sinnott JA (2016) Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks. Submitted."
+)
+
+citFooter("We have invested a lot of time and effort in implementing kernscr, ", "please cite it when using it for data analysis or research.")
