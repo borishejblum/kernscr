@@ -15,9 +15,10 @@ M_vec <- function(t, all_times, failures, gamma_vec, U){
   indexes <- (event_time_mat <= time_mat) & (failures == 1)
 
   # this returns the max index of the max failure time prior to min(t, all_times[i])
-  # here it throw an error if we don't have a single failure!!!
-  # should handle that in a more delicate way
-  fail_indexes <- apply(indexes, 2, cumsum)
+  fail_indexes <- try(apply(indexes, 2, cumsum))
+  if(inherits(fail_indexes, "try-error")){
+    stop("no failures detected: estimation in internal function 'M_vec' impossible")
+  }
 
   # the + 1 here of the indexes is added if we ave failures before events refer to the logic above
   s <- as.vector(exp(U%*%gamma_vec))*(lambdas_of_fail_times[(fail_indexes + 1)])
@@ -45,7 +46,10 @@ M_vec_pert <- function(perturb_mat, t, all_times, failures, gamma_vec, U){
 
   indexes <- (event_time_mat <= time_mat) & (failures == 1)
 
-  fail_indexes <- apply(indexes,2,cumsum)
+  fail_indexes <- apply(indexes, 2, cumsum)
+  if(inherits(fail_indexes, "try-error")){
+    stop("no failures detected: estimation in internal function 'M_vec_pert' impossible")
+  }
 
   # the + 1 here of the indexes is added if we have failures before events refer to the logic above
   lambdas_of_fail_times_prev <- c(0, lambda(fail_times, all_times, failures, gamma_vec, U))
