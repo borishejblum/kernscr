@@ -86,7 +86,7 @@
 #'mapped_genes <- mappedkeys(x)
 #'xx <- as.list(x[mapped_genes])
 #'cancer_pathways_Symbol <- lapply(cancer_pathways, function(v){unlist(xx[v])})
-#'sapply(cancer_pathways, function(x){length(intersect(x, rownames(BC.dat.exp)))/length(x)}))
+#'sapply(cancer_pathways, function(x){length(intersect(x, rownames(BC.dat.exp)))/length(x)})
 #'}
 #'
 #' @keywords datasets
