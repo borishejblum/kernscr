@@ -14,9 +14,9 @@ Depends:
     R (>= 3.0)
 Imports:
     graphics,
-    stats,
+    MASS,
     mvtnorm,
-    MASS
+    stats
 Suggests:
     gdata,
     org.Hs.eg.db
