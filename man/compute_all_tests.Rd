@@ -6,7 +6,7 @@
 \usage{
 compute_all_tests(data, ind_gene = 7:ncol(data), num_perts = 1000,
   Ws = NULL, rho = NA, kernel = c("linear", "gaussian", "poly"), d = 2,
-  pca_thres = 0.9, ...)
+  pca_thres = 0.9, get_ptb_pvals = FALSE, ...)
 }
 \arguments{
 \item{data}{a \code{data.frame} of \code{N} rows and set up as the output from \code{\link{sim_SCR_data}} with columns:\itemize{
@@ -23,7 +23,7 @@ compute_all_tests(data, ind_gene = 7:ncol(data), num_perts = 1000,
 
 \item{num_perts}{number of perturbations used. Default is \code{1000}.}
 
-\item{Ws}{optional inputed perturbations, should be a vector of length \code{N x num.perts} containing
+\item{Ws}{optional inputed perturbations, should be a vector of length \code{N x num_perts} containing
 i.i.d. realization of a random variable with mean=0 and variance=1.}
 
 \item{rho}{a vector of rhos, such as one found created from the range returned by \code{\link{findRhoInterval}},
@@ -39,15 +39,22 @@ See \code{\link{genericKernelEval}}.}
 \item{pca_thres}{a number between \code{0} and \code{1} giving the  threshold to be used for PCA.
 Default is \code{0.9}. If \code{NULL}, no PCA is performed.}
 
+\item{get_ptb_pvals}{a logical flag indicating whether perturbed p-values should be returned
+as part of the results. Default is \code{FALSE}.}
+
 \item{...}{extra parameters to be passed to a user-defined kernel.}
 }
 \value{
-a vector of p-values for 5 different models with names:\itemize{
+either a \code{vector} of p-values for 5 different models with names:\itemize{
 \item{\code{"SCR"}:}{ Semi-Comperting Risks}
 \item{\code{"PFS"}:}{ Progression Free Survival}
 \item{\code{"CR"}:}{ Competing Risks}
 \item{\code{"OS"}:}{ Overall Survival}
 \item{\code{"SCR_alt"}:}{ SCR allowing different tuning params for the two event time processes}
+} or else if \code{get_ptb_pvals} is \code{TRUE}, a \code{list} with 2 elements:\itemize{
+\item{\code{"obs_pvals"}:}{ a vector containing the observed p-values for each of the 5 models as described above}
+\item{\code{"null_pvals_perts"}:}{ a matrix of dimensions \code{num_perts x 5} containing the corresponding
+perturbed p-values}
 }
 }
 \description{
@@ -80,9 +87,9 @@ range(my_rho_init) # good to check that the interval produced here is strictly c
 rhos <- exp(seq(log(rho_set[1]),log(rho_set[2]), length=50))
 
 # run the tests with Gaussian kernel
-compute_all_tests(data = mydata, num_perts=100, rho=rhos, kernel="gaussian")
+compute_all_tests(data = mydata, num_perts=1000, rho=rhos, kernel="gaussian")
 # run the tests with linear kernel
-compute_all_tests(data=mydata, num.perts=100, kernel="linear")
+compute_all_tests(data=mydata, num_perts=1000, kernel="linear")
 }
 
 }
