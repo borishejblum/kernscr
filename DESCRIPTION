@@ -13,6 +13,8 @@ Description: Kernel Machine Score Test for Pathway Analysis in the Presence of S
 Depends:
     R (>= 3.0)
 Imports:
+    graphics,
+    stats,
     mvtnorm,
     MASS
 Suggests:

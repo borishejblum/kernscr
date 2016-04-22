@@ -23,6 +23,7 @@
 #'}
 #'
 #'@importFrom mvtnorm rmvnorm
+#'@importFrom stats pnorm rexp
 #'@export
 #'
 #'@examples
@@ -53,13 +54,13 @@ sim_SCR_data <- function(data_size, ncol_gene_mat, feat_m, feat_d, mu_cen, cov,
   Zgen.mat <- mvtnorm::rmvnorm(data_size, sigma = S)
 
   # the correlated errors
-  eps <- mvtnorm::rmvnorm(n=data_size,mean=c(0,0),sigma=matrix(norm_vcov,2,2))
-  eps <- log(-log(pnorm(eps)))
+  eps <- mvtnorm::rmvnorm(n=data_size, mean=c(0,0), sigma=matrix(norm_vcov,2,2))
+  eps <- log(-log(stats::pnorm(eps)))
   Tm <- exp(-log(lam_m) + feat_m(Zgen.mat) + eps[,1])
   Td <- exp(-log(lam_d) + feat_d(Zgen.mat) + eps[,2])
 
   # the censoring process
-  Tc <- rexp(data_size, 1/mu_cen)
+  Tc <- stats::rexp(data_size, 1/mu_cen)
 
   Tmat1 <- cbind(C=as.vector(Tc), Tm=as.vector(Tm), Td=as.vector(Td))
   Tmin1 <- apply(Tmat1, 1, min) # smallest event time

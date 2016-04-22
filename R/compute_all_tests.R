@@ -44,7 +44,7 @@
 #'
 #'@references Neykov M, Hejblum BP, Sinnot JA, Kernel Machine Score Test for Pathway Analysis in the
 #'Presence of Semi-Competing Risks, submitted, 2016.
-#'
+#'@importFrom stats rnorm sd
 #'@export
 #'
 #'@examples
@@ -84,7 +84,7 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
                               get_ptb_pvals=FALSE, ...){
   n <- nrow(data)
   if(is.null(Ws)){
-    Ws <- rnorm(n*num_perts)
+    Ws <- stats::rnorm(n*num_perts)
   }
 
   p_gene <- length(ind_gene)
@@ -177,7 +177,7 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
     for(i in 0:(length(rho) - 1)){ ## num_perts x n.rho matrix
       tmpres <-  cbind(tmpres, colSums(part_3.list[[l]][i*n + 1:n,]))
     }
-    tmp_sd <- apply(tmpres,2,sd)
+    tmp_sd <- apply(tmpres, 2, stats::sd)
     stat_pert_std_list[[l]]=as.matrix(tmpres/VTM(tmp_sd, num_perts))
     sd_all <- cbind(sd_all, tmp_sd)
   }
@@ -185,8 +185,8 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   colnames(stats_all_std) = names(part_3.list)
 
   ## McDm, allowing different rhos for each process if needed ##
-  stats_tune2_std <- sum(apply(stats_all_std[,c(1,3),drop=FALSE], 2 ,max)) ## maximum statistic across rho and then outcome
-  perts_tune2_std <- apply(matrix(unlist(lapply(stat_pert_std_list, function(xx){apply(xx, 1, max)})),ncol=3)[, c(1, 3)], 1, sum)
+  stats_tune2_std <- sum(apply(stats_all_std[,c(1,3),drop=FALSE], 2, max)) ## maximum statistic across rho and then outcome
+  perts_tune2_std <- apply(matrix(unlist(lapply(stat_pert_std_list, function(xx){apply(xx, 1, max)})), ncol=3)[, c(1, 3)], 1, sum)
   pvals_tune2_std <- mean(perts_tune2_std > stats_tune2_std)
   ## sum over cause M and cause D then take max over rho ##
   stats_McDc_std <- max(apply(stats_all_std[,c("Mc","Dc"),drop=F], 1, sum))

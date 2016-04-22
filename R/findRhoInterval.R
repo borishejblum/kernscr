@@ -26,6 +26,7 @@
 #'\code{warning_suppress} argument.
 #'
 #'@return an upper and lower bound to look for rho
+#'@importFrom stats na.omit
 #'@export
 #'
 #'@examples
@@ -75,10 +76,16 @@ findRhoInterval <- function(tZ, rho_init = seq(0.01, 20, length=300)*nrow(tZ), k
     }
     return(c(slope,length(log_j)))
   }
-  if(warning_suppress){options(warn=-1)}
-  slope.vec = na.omit(cbind("rho"=rho,"slope"=t(sapply(1:length(rho),slope.eigen))))
-  if(warning_suppress){options(warn=0)}
-  ; colnames(slope.vec)[2:3] = c("slope","m.keep")
-  rho <- slope.vec[,"rho"]
-  c(max(c(min(rho),slope.vec[slope.vec[,"slope"]<=rate_range[1],"rho"])),min(c(max(rho), slope.vec[slope.vec[,"slope"]>=rate_range[2],"rho"])))
+  if(warning_suppress){
+    options(warn=-1)
+  }
+  slope_vec <-  stats::na.omit(cbind("rho"=rho,"slope"=t(sapply(1:length(rho),slope.eigen))))
+  if(warning_suppress){
+    options(warn=0)
+  }
+  colnames(slope_vec)[2:3] = c("slope","m_keep")
+  rho <- slope_vec[,"rho"]
+  c(max(c(min(rho), slope_vec[slope_vec[,"slope"] <= rate_range[1],"rho"])),
+    min(c(max(rho), slope_vec[slope_vec[, "slope"]>=rate_range[2], "rho"]))
+  )
 }
