@@ -90,14 +90,16 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   p_gene <- length(ind_gene)
 
   ## data_M sorted by X_M (col #1), data_D sorted by X_D (col #2)
-  data_M <- data[order(data[,1]),]
-  data_D <- data_M[order(data_M[,2]),]
+  o_data_M <- order(data[, 1])
+  data_M <- data[o_data_M, ]
+  o_data_DfromM <- order(data_M[, 2])
+  data_D <- data_M[o_data_DfromM, ]
 
-  M_Mc <- M_vec(Inf, data_M[,1], 1*(data_M[,3]==1), rep(0, 2), matrix(0, n, 2)) ## cause specific hazard for M
-  M_Dc <- M_vec(Inf, data_M[,1], 1*(data_M[,3]==2), rep(0, 2), matrix(0, n, 2)) ## cause specific hazard for D
-  M_Dm <- M_vec(Inf, data_D[,2], 1*(data_D[,4]==1), rep(0, 2), matrix(0, n, 2)) ## marginal hazard for D
-  M_Mc <- M_Mc[, order(data_M[,2]), drop = FALSE] ## this ensures that all sorting is done according to sorting of data_D (col #2) ##
-  M_Dc <- M_Dc[, order(data_M[,2]), drop = FALSE] ## this ensures that all sorting is done according to sorting of data_D (col #2) ##
+  M_Mc <- M_vec(Inf, data_M[, 1], 1*(data_M[,3]==1), rep(0, 2), matrix(0, n, 2)) ## cause specific hazard for M
+  M_Dc <- M_vec(Inf, data_M[, 1], 1*(data_M[,3]==2), rep(0, 2), matrix(0, n, 2)) ## cause specific hazard for D
+  M_Dm <- M_vec(Inf, data_D[, 2], 1*(data_D[,4]==1), rep(0, 2), matrix(0, n, 2)) ## marginal hazard for D
+  M_Mc <- M_Mc[, o_data_DfromM, drop = FALSE] ## this ensures that all sorting is done according to sorting of data_D (col #2) ##
+  M_Dc <- M_Dc[, o_data_DfromM, drop = FALSE] ## this ensures that all sorting is done according to sorting of data_D (col #2) ##
 
   if(kernel=="linear"){
     K_rho <- linKernelEval(tZ=t(data_D[, ind_gene]))
@@ -119,59 +121,59 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   }else{
     if(kernel=="linear"){
       K_rho_eig <- eigen(K_rho)
-      ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values))>=pca_thres)[1]
-      K_rho <- tcrossprod(matrix(rep(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho), nrow = sqrt_ncol_K_rho, byrow = T)*K_rho_eig$vectors[, 1:ncomp])
+      ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values)) >= pca_thres)[1]
+      K_rho <- tcrossprod(VTM(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho)*K_rho_eig$vectors[, 1:ncomp])
     }else{
-      K_rho_new <- NULL
+      K_rho_new_list <- list()
       for (i in 1:length(rho)){
-        K_rho_eig <- eigen(K_rho[1:sqrt_ncol_K_rho+(i-1)*sqrt_ncol_K_rho, ])
-        ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values))>=pca_thres)[1]
-        K_rho_new <- rbind(K_rho_new,
-                           tcrossprod(matrix(rep(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho), nrow = sqrt_ncol_K_rho, byrow = T)*K_rho_eig$vectors[, 1:ncomp])
-        )
+        K_rho_eig <- eigen(K_rho[1:sqrt_ncol_K_rho + (i-1)*sqrt_ncol_K_rho, ])
+        ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values)) >= pca_thres)[1]
+        K_rho_new_list[[i]] <- tcrossprod(VTM(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho)*K_rho_eig$vectors[, 1:ncomp])
       }
-      K_rho <- K_rho_new
+      K_rho <- do.call(rbind, K_rho_new_list)
     }
   }
+  t_K_rho <- t(K_rho)
 
-
-  # returns a function to obtaing the K_rhos for a fixed matrix K_rho of the type above
-  obtain_K_rhos <- function(K_rho, M){
-    return(matrix(t(M)%*%t(K_rho), ncol = ncol(K_rho), byrow = T)%*%M)
+  # returns a to obtaing the K_rhos for a fixed matrix K_rho of the type above
+  obtain_K_rhos <- function(t_K_rho, M){
+    return(c(M%*%matrix(M%*%t_K_rho, nrow = sqrt_ncol_K_rho)))
   }
 
   ## including cause specific hazard for M, D as well as marginal for D ##
-  stats_all <- cbind("Mc"=obtain_K_rhos(K_rho, t(M_Mc)),
-                     "Dc"=obtain_K_rhos(K_rho, t(M_Dc)),
-                     "Dm"=obtain_K_rhos(K_rho, t(M_Dm))
+  stats_all <- cbind("Mc"=obtain_K_rhos(t_K_rho, M_Mc),
+                     "Dc"=obtain_K_rhos(t_K_rho, M_Dc),
+                     "Dm"=obtain_K_rhos(t_K_rho, M_Dm)
   )
 
   ## align perturbations with the ordered data
   Ws_mat <- matrix(Ws, nrow(data), num_perts)
-  Ws_mat_M <- Ws_mat[order(data[, 1]), ]
-  Ws_mat_D <- Ws_mat_M[order(data_M[, 2]), ]
+  Ws_mat_M <- Ws_mat[o_data_M, ]
+  Ws_mat_D <- Ws_mat_M[o_data_DfromM, ]
 
   ### using the new method based on cause-specific hazard model ###
   M_Mc_pert <- M_vec_pert(Ws_mat_M, Inf, data_M[, 1], 1*(data_M[, 3]==1), rep(0, 2), matrix(0, n, 2)) ## cause specific for M
   M_Dc_pert <- M_vec_pert(Ws_mat_M, Inf, data_M[, 1], 1*(data_M[, 3]==2), rep(0, 2), matrix(0, n, 2)) ## cause specific for D
-  M_Mc_pert <- M_Mc_pert[order(data_M[, 2]), ] ## this ensures that sorting is done according to sorting of data_D
-  M_Dc_pert <- M_Dc_pert[order(data_M[, 2]), ] ## this ensures that sorting is done according to sorting of data_D
+  M_Mc_pert <- M_Mc_pert[o_data_DfromM, ] ## this ensures that sorting is done according to sorting of data_D
+  M_Dc_pert <- M_Dc_pert[o_data_DfromM, ] ## this ensures that sorting is done according to sorting of data_D
   M_Dm_pert <- M_vec_pert(Ws_mat_D, Inf, data_D[, 2], 1*(data_D[, 4]==1), rep(0, 2), matrix(0, n, 2)) ## marginal for D
 
-  part_1_Mc <- t(M_Mc_pert)%*%t(K_rho)
-  part_1_Dc <- t(M_Dc_pert)%*%t(K_rho)
-  part_1_Dm <- t(M_Dm_pert)%*%t(K_rho)
+
+  part_1_Mc <- crossprod(M_Mc_pert, t_K_rho)
+  part_1_Dc <- crossprod(M_Dc_pert, t_K_rho)
+  part_1_Dm <- crossprod(M_Dm_pert, t_K_rho)
 
   part_2_Mc <- c(t(M_Mc_pert))*c(part_1_Mc)
   part_2_Dc <- c(t(M_Dc_pert))*c(part_1_Dc)
   part_2_Dm <- c(t(M_Dm_pert))*c(part_1_Dm)
+
   part_3.list <- list("Mc"=matrix(part_2_Mc, ncol = num_perts, byrow = T), ## cause specific M, n*K_rho rows: (1:n), n+(1:n), 2n+(1:n)
                       "Dc"=matrix(part_2_Dc, ncol = num_perts, byrow = T), ## cause specific D
                       "Dm"=matrix(part_2_Dm, ncol = num_perts, byrow = T)) ## marginal D
 
-  stat_pert_std_list = as.list(1:3)
-  names(stat_pert_std_list) <- names(part_3.list)
-  sd_all= NULL
+  stat_pert_std_list <-  as.list(1:3)
+  names(stat_pert_std_list) <- c("Mc", "Dc", "Dm")
+  sd_all <- NULL
   for(l in 1:3){
     tmpres = NULL
     for(i in 0:(length(rho) - 1)){ ## num_perts x n.rho matrix
@@ -181,11 +183,11 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
     stat_pert_std_list[[l]]=as.matrix(tmpres/VTM(tmp_sd, num_perts))
     sd_all <- cbind(sd_all, tmp_sd)
   }
-  stats_all_std = stats_all/sd_all ## standardized statistic for Mc, Dc and Dm
-  colnames(stats_all_std) = names(part_3.list)
+  stats_all_std <- stats_all/sd_all ## standardized statistic for Mc, Dc and Dm
+  colnames(stats_all_std) <- c("Mc", "Dc", "Dm")
 
   ## McDm, allowing different rhos for each process if needed ##
-  stats_tune2_std <- sum(apply(stats_all_std[,c(1,3),drop=FALSE], 2, max)) ## maximum statistic across rho and then outcome
+  stats_tune2_std <- sum(apply(stats_all_std[, c(1,3), drop=FALSE], 2, max)) ## maximum statistic across rho and then outcome
   perts_tune2_std <- apply(matrix(unlist(lapply(stat_pert_std_list, function(xx){apply(xx, 1, max)})), ncol=3)[, c(1, 3)], 1, sum)
   pvals_tune2_std <- mean(perts_tune2_std > stats_tune2_std)
   ## sum over cause M and cause D then take max over rho ##
@@ -205,9 +207,12 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
 
 
   ## using time to min(death,progression) with a single cox model: PFS
-  data_Min <- data[order(data[, 5]),]
-  Ws_mat_min <- Ws_mat[order(data[, 5]),]
+  o_data_PFS <- order(data[, 5])
+  data_Min <- data[o_data_PFS, ]
+  Ws_mat_min <- Ws_mat[o_data_PFS, ]
   M_min <- M_vec(Inf, data_Min[, 5], data_Min[, 6], rep(0, 2), matrix(0, n, 2))
+
+
 
   if(kernel=="linear"){
     K_rho <- linKernelEval(tZ=t(data_Min[, ind_gene]))
@@ -220,36 +225,37 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
     K_rho <- genericKernelEval(tZ = t(data_Min[, ind_gene]), ...)
     K_rho <- matrix(K_rho, nrow=1)
   }
-  sqrt_ncol_K_rho <- sqrt(ncol(K_rho))
   K_rho <- matrix(c(t(K_rho)), ncol = sqrt_ncol_K_rho, byrow = T)
 
   # do kernel PCA
   if(kernel=="linear"){
     K_rho_eig <- eigen(K_rho)
     ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values)) >= pca_thres)[1]
-    K_rho <- tcrossprod(matrix(rep(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho), nrow = sqrt_ncol_K_rho, byrow = T)*K_rho_eig$vectors[, 1:ncomp])
+    K_rho <- tcrossprod(VTM(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho)*K_rho_eig$vectors[, 1:ncomp])
   }else{
-    K_rho_new <- NULL
+    K_rho_new_list <- list()
     for (i in 1:length(rho)){
       K_rho_eig <- eigen(K_rho[1:sqrt_ncol_K_rho + (i-1)*sqrt_ncol_K_rho, ])
-      ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values))>=pca_thres)[1]
-      K_rho_new <- rbind(K_rho_new,
-                         tcrossprod(matrix(rep(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho), nrow = sqrt_ncol_K_rho, byrow = T)*K_rho_eig$vectors[, 1:ncomp])
-      )
+      ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values)) >= pca_thres)[1]
+      K_rho_new_list[[i]] <- tcrossprod(VTM(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho)*K_rho_eig$vectors[, 1:ncomp])
     }
-    K_rho <- K_rho_new
+    K_rho <- do.call(rbind, K_rho_new_list)
   }
+  t_K_rho <- t(K_rho)
 
-  stats_min <- obtain_K_rhos(K_rho, t(M_min))
+  stats_min <- obtain_K_rhos(t_K_rho, M_min)
   M_min_pert <- M_vec_pert(Ws_mat_min, Inf, data_Min[, 5], data_Min[, 6], rep(0, 2), matrix(0, n, 2))
-  part_1_min <- t(M_min_pert)%*%t(K_rho)
+
+  part_1_min <- crossprod(M_min_pert, t_K_rho)
   part_2_min <- c(t(M_min_pert))*c(part_1_min)
   part_3_min <- matrix(part_2_min, ncol = num_perts, byrow = T)
 
-  res_min <- c()
+  res_min_list <- list()
   for(i in 0:(length(rho) - 1)){
-    res_min <- cbind(res_min, colSums(part_3_min[i*n + 1:n, ]))
+    res_min_list[[i+1]] <- colSums(part_3_min[i*n + 1:n, ])
   }
+  res_min <- do.call(cbind, res_min_list)
+
   std_devs_min <- sqrt(colSums((res_min - matrix(rep(colMeans(res_min), num_perts), nrow = nrow(res_min),byrow=T))^2)/(num_perts - 1))
   pval_min <-  sum(apply(t(res_min)/std_devs_min, 2, max) >= max(stats_min/std_devs_min))/num_perts
 
@@ -263,7 +269,7 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
                                         "CR"=1-rank(perts_McDc_std)/num_perts, "OS"=1-rank(perts_max_std[, 3])/num_perts,
                                         "SCR_alt"=1-rank(perts_tune2_std)/num_perts))
   }else{
-    tmpout <- c("SCR"=pvals_McDm_std, "PFS"=pval_min, "CR"=pvals_McDc_std,"OS"=pvals_max_std[3], "SCR_alt"=pvals_tune2_std)
+    tmpout <- res_pvals
   }
 
   return(tmpout)
