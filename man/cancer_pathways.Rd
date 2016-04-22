@@ -3,6 +3,7 @@
 \docType{data}
 \name{cancer_pathways}
 \alias{cancer_pathways}
+\alias{vijver}
 \title{70 pathways from MSigDB c2CP}
 \format{a list of 70 relevant pathways from an old version of MSigDB c2CP contening the Entrez IDs.}
 \description{
