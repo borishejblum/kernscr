@@ -3,6 +3,7 @@
 #'@name cancer_pathways
 #'@rdname cancer_pathways
 #'@aliases cancer_pathways
+#'@aliases vijver
 #'
 #'@references MJ van de Vijver,YD He, LJ van't Veer, H Dai, AAM Hart, DW Voskuil,
 #'A gene-expression signature as a predictor of survival in breast cancer,
