@@ -85,8 +85,9 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   n <- nrow(data)
   if(is.null(Ws)){
     Ws <- stats::rnorm(n*num_perts)
+  }else{
+    num_perts <- length(Ws)/n
   }
-
   p_gene <- length(ind_gene)
 
   ## data_M sorted by X_M (col #1), data_D sorted by X_D (col #2)
@@ -101,7 +102,7 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   M_Mc <- M_Mc[, o_data_DfromM, drop = FALSE] ## this ensures that all sorting is done according to sorting of data_D (col #2) ##
   M_Dc <- M_Dc[, o_data_DfromM, drop = FALSE] ## this ensures that all sorting is done according to sorting of data_D (col #2) ##
 
-  if(kernel=="linear"){
+    if(kernel=="linear"){
     K_rho <- linKernelEval(tZ=t(data_D[, ind_gene]))
     K_rho <- matrix(K_rho, nrow=1)
   }else if(kernel=="gaussian"){
@@ -116,6 +117,7 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   K_rho <- matrix(c(t(K_rho)), ncol = sqrt_ncol_K_rho, byrow = TRUE)
 
   # do kernel PCA
+  tempcomp <- c()
   if(is.null(pca_thres)){
     warning("Not performing PCA: potential loss of power, especially with small samples")
   }else{
@@ -123,14 +125,17 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
       K_rho_eig <- eigen(K_rho)
       ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values)) >= pca_thres)[1]
       K_rho <- tcrossprod(VTM(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho)*K_rho_eig$vectors[, 1:ncomp])
+      tempcomp <- ncomp
     }else{
       K_rho_new_list <- list()
       for (i in 1:length(rho)){
         K_rho_eig <- eigen(K_rho[1:sqrt_ncol_K_rho + (i-1)*sqrt_ncol_K_rho, ])
         ncomp <- which(cumsum(K_rho_eig$values/sum(K_rho_eig$values)) >= pca_thres)[1]
+        tempcomp <- c(tempcomp, ncomp)
         K_rho_new_list[[i]] <- tcrossprod(VTM(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho)*K_rho_eig$vectors[, 1:ncomp])
       }
       K_rho <- do.call(rbind, K_rho_new_list)
+      print(paste("number of eigenvalues considered:", range(tempcomp)))
     }
   }
   t_K_rho <- t(K_rho)
@@ -147,7 +152,7 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   )
 
   ## align perturbations with the ordered data
-  Ws_mat <- matrix(Ws, nrow(data), num_perts)
+  Ws_mat <- matrix(Ws, n, num_perts)
   Ws_mat_M <- Ws_mat[o_data_M, ]
   Ws_mat_D <- Ws_mat_M[o_data_DfromM, ]
 
@@ -157,7 +162,6 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   M_Mc_pert <- M_Mc_pert[o_data_DfromM, ] ## this ensures that sorting is done according to sorting of data_D
   M_Dc_pert <- M_Dc_pert[o_data_DfromM, ] ## this ensures that sorting is done according to sorting of data_D
   M_Dm_pert <- M_vec_pert(Ws_mat_D, Inf, data_D[, 2], 1*(data_D[, 4]==1), rep(0, 2), matrix(0, n, 2)) ## marginal for D
-
 
   part_1_Mc <- crossprod(M_Mc_pert, t_K_rho)
   part_1_Dc <- crossprod(M_Dc_pert, t_K_rho)
@@ -205,14 +209,11 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   pvals_max_std <- apply(perts_max_std > VTM(stats_max_std, num_perts), 2, mean)
   #names(pvals_max_std) = c("Mc","Dc","Dm")
 
-
   ## using time to min(death,progression) with a single cox model: PFS
   o_data_PFS <- order(data[, 5])
   data_Min <- data[o_data_PFS, ]
   Ws_mat_min <- Ws_mat[o_data_PFS, ]
   M_min <- M_vec(Inf, data_Min[, 5], data_Min[, 6], rep(0, 2), matrix(0, n, 2))
-
-
 
   if(kernel=="linear"){
     K_rho <- linKernelEval(tZ=t(data_Min[, ind_gene]))
@@ -259,8 +260,6 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   std_devs_min <- sqrt(colSums((res_min - matrix(rep(colMeans(res_min), num_perts), nrow = nrow(res_min),byrow=T))^2)/(num_perts - 1))
   pval_min <-  sum(apply(t(res_min)/std_devs_min, 2, max) >= max(stats_min/std_devs_min))/num_perts
 
-
-
   res_pvals <- c("SCR"=pvals_McDm_std, "PFS"=pval_min, "CR"=pvals_McDc_std,"OS"=pvals_max_std[3], "SCR_alt"=pvals_tune2_std)
 
   if(get_ptb_pvals){
@@ -271,6 +270,7 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
   }else{
     tmpout <- res_pvals
   }
+
 
   return(tmpout)
 }

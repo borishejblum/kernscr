@@ -57,9 +57,9 @@
 #'}
 
 findRhoInterval <- function(tZ, rho_init = seq(0.01, 20, length=300)*nrow(tZ), kernel = c("gaussian", "poly"),
-                            d = NA, rate_range=c(1.5,4), warning_suppress=TRUE){
+                            d = NA, rate_range=c(1.5,4), pca_thres=0.9, warning_suppress=TRUE){
   rho <- rho_init
-  rho0 <- 0.90
+  rho0 <- pca_thres
   if (kernel == "gaussian"){
     G <- gaussKernelEval_multipleRhos(tZ, rho=rho)
   }

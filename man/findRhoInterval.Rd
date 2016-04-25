@@ -6,7 +6,7 @@
 \usage{
 findRhoInterval(tZ, rho_init = seq(0.01, 20, length = 300) * nrow(tZ),
   kernel = c("gaussian", "poly"), d = NA, rate_range = c(1.5, 4),
-  warning_suppress = TRUE)
+  pca_thres = 0.9, warning_suppress = TRUE)
 }
 \arguments{
 \item{tZ}{a \code{P x N} matrix of genomic covariates (i.e., the usual data array Z transposed)}
