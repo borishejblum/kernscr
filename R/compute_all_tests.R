@@ -21,7 +21,7 @@
 #'@param kernel a character string indicating which kernel is used. Possible values (currently implemented) are
 #'\code{"linear"}, \code{"gaussian"} or \code{"poly"}. Otherwise, this can also be a user defined kernel function.
 #'See \code{\link{genericKernelEval}}.
-#'@param pca_thres a number between \code{0} and \code{1} giving the  threshold to be used for PCA.
+#'@param pca_thres a number between \code{0} and \code{1} giving the threshold to be used for PCA.
 #'Default is \code{0.9}. If \code{NULL}, no PCA is performed.
 #'@param d if \code{kernel} is \code{"poly"}, the polynomial power. Default is 2 (quadratic kernel).
 #'@param get_ptb_pvals a logical flag indicating whether perturbed p-values should be returned

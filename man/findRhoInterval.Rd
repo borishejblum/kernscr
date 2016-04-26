@@ -22,6 +22,9 @@ Default is \code{NA}.}
 
 \item{rate_range}{a vector of length 2 indicating the range of alpha in the paper. Default is \code{c(1.5,4)}.}
 
+\item{pca_thres}{a number between \code{0} and \code{1} giving the threshold to be used for PCA.
+Default is \code{0.9}. If \code{NULL}, no PCA is performed.}
+
 \item{warning_suppress}{logical flag. Indicating wether the warnings should be suppress during
 the linear model fitting step. Default is \code{TRUE}. See details.}
 }
