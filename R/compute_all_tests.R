@@ -135,7 +135,7 @@ compute_all_tests <- function(data, ind_gene=7:ncol(data), num_perts=1000, Ws=NU
         K_rho_new_list[[i]] <- tcrossprod(VTM(sqrt(K_rho_eig$values[1:ncomp]), sqrt_ncol_K_rho)*K_rho_eig$vectors[, 1:ncomp])
       }
       K_rho <- do.call(rbind, K_rho_new_list)
-      print(paste("number of eigenvalues considered:", range(tempcomp)))
+      print(paste("range of eigenvalues considered:", paste(range(tempcomp), collapse=" - ")))
     }
   }
   t_K_rho <- t(K_rho)
