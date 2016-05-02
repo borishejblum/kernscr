@@ -12,10 +12,12 @@
 #'Significance of Multiple Genetic Markers for Risk Prediction, \emph{Biometrics},
 #'67(3):975-986, 2011.
 #'
+#'@usage data("cancer_pathways")
+#'
 #'@format a list of 70 relevant pathways from an old version of MSigDB c2CP contening the Entrez IDs.
 #'
 #'@examples
-#'data("cancer_pathway")
+#'data("cancer_pathways")
 #'
 #'##get the data from Vijver publication
 #'
@@ -86,7 +88,7 @@
 #'mapped_genes <- mappedkeys(x)
 #'xx <- as.list(x[mapped_genes])
 #'cancer_pathways_Symbol <- lapply(cancer_pathways, function(v){unlist(xx[v])})
-#'sapply(cancer_pathways, function(x){length(intersect(x, rownames(BC.dat.exp)))/length(x)})
+#'sapply(cancer_pathways, function(x){length(intersect(x, rownames(BC_dat_exp)))/length(x)})
 #'}
 #'
 #' @keywords datasets

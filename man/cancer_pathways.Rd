@@ -6,11 +6,14 @@
 \alias{vijver}
 \title{70 pathways from MSigDB c2CP}
 \format{a list of 70 relevant pathways from an old version of MSigDB c2CP contening the Entrez IDs.}
+\usage{
+data("cancer_pathways")
+}
 \description{
 70 pathways from MSigDB c2CP
 }
 \examples{
-data("cancer_pathway")
+data("cancer_pathways")
 
 ##get the data from Vijver publication
 
