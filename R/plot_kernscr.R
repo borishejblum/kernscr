@@ -52,8 +52,8 @@ plot_kernscr_methodsplit <- function(raw_melted, adj_melted, kernel, method,
   tmpy <- log10(adj_melted[adj_melted$kern==kernel & adj_melted$variable==method[1], "value"])
   adj_tmpy = pmax(tmpy, adj_lower_threshold)
   graphics::plot(adj_tmpy, range, pch = 15, ylab = "", xlab = "log10 adjusted p-value",
-                 yaxt = "n", xaxt = "n", xlim = c(raw_lower_threshold,0), bty = "n", cex = 0.7, cex.lab = 1.1)
-  breaks_adj <- floor(raw_lower_threshold):0
+                 yaxt = "n", xaxt = "n", xlim = c(adj_lower_threshold, 0), bty = "n", cex = 0.7, cex.lab = 1.1)
+  breaks_adj <- floor(adj_lower_threshold):0
   breaks_adj[1] <- adj_lower_threshold
   graphics::axis(side = 1, at = breaks_adj, labels = c("", as.character(breaks_adj[-1])), tick=TRUE)
   graphics::axis(side = 1, at = breaks_adj[1],labels = c(paste("<", breaks_adj[1])), hadj = 1)
@@ -68,7 +68,12 @@ plot_kernscr_methodsplit <- function(raw_melted, adj_melted, kernel, method,
 #'@keywords internal
 #'@export
 plot_kernscr_kernelsplit <- function(raw_melted, adj_melted, kernel, method,
-                                     pathway_names=TRUE, title=NULL, lower_threshold=-4){
+                                     pathway_names = TRUE, title = NULL, raw_lower_threshold = round(log10(1/10000), 1),
+                                     adj_lower_threshold = NULL){
+
+  if(!is.null(adj_lower_threshold)){
+    warning("'adj_lower_threshold' argument is ignored")
+  }
   range <- seq(70,1)
 
   if(pathway_names){
@@ -93,7 +98,7 @@ plot_kernscr_kernelsplit <- function(raw_melted, adj_melted, kernel, method,
   for(k in kernel){
 
     tmpy <- log10(adj_melted[adj_melted$kern==k & adj_melted$variable==method, "value"])
-    tmpy <- pmax(tmpy, lower_threshold)
+    tmpy <- pmax(tmpy, adj_lower_threshold)
 
     if(pathway_names){
       graphics::plot(tmpy,range,type="n",pch=15,ylab="",xlab="",
@@ -122,14 +127,14 @@ plot_kernscr_kernelsplit <- function(raw_melted, adj_melted, kernel, method,
       par(mar=c(5,0,5,4))
     }
     graphics::plot(tmpy,range,pch=15,ylab="",xlab="log10 Pvalue",
-                   yaxt="n",xaxt="n",xlim=c(lower_threshold,0),bty="n",cex=0.)
-    graphics::axis(side=1, at = c(lower_threshold, -3, -2, -1, 0),
-                   labels=c(paste0("< ", lower_threshold),"-3", "-2","-1","0"))
+                   yaxt="n",xaxt="n",xlim=c(adj_lower_threshold,0),bty="n",cex=0.)
+    graphics::axis(side=1, at = c(adj_lower_threshold, -3, -2, -1, 0),
+                   labels=c(paste0("< ", adj_lower_threshold),"-3", "-2","-1","0"))
     tmpy <- pmax(log10(raw_melted[raw_melted$kern==k & raw_melted$variable==method, "value"]),
-                 lower_threshold)
+                 adj_lower_threshold)
     graphics::points(tmpy,range,pch=4,cex=0.7)
     tmpy <- pmax(log10(adj_melted[adj_melted$kern==k & raw_melted$variable==method, "value"]),
-                 lower_threshold)
+                 adj_lower_threshold)
     graphics::points(tmpy,range,pch=15,cex=0.62)
     graphics::abline(v = log10(0.05), col="gray")
     if(title != ""){
