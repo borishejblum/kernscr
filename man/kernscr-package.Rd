@@ -12,18 +12,19 @@ Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing
 \tabular{ll}{
 Package: \tab kernscr\cr
 Type: \tab Package\cr
-Version: \tab 1.0.1\cr
-Date: \tab 2016-05-03\cr
+Version: \tab 1.0.3\cr
+Date: \tab 2016-06-28\cr
 License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 }
 The main function of the kernscr package is \code{\link{compute_all_tests}}
 }
 \author{
-Boris P. Hejblum, Matey Neykov, Jennifer A. Sinnott
+Matey Neykov, Boris P. Hejblum, Jennifer A. Sinnott
 --- Maintainer: Boris P. Hejblum
 }
 \references{
 Neykov M, Hejblum BP, Sinnot JA,  Kernel Machine Score Test for
-Pathway Analysis in the Presence of Semi-Competing Risks, \emph{submitted}, 2016.
+Pathway Analysis in the Presence of Semi-Competing Risks, \emph{Stat Methods in Med Res},
+in press, 2016.
 }
 

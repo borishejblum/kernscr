@@ -6,8 +6,8 @@
 #'\tabular{ll}{
 #'Package: \tab kernscr\cr
 #'Type: \tab Package\cr
-#'Version: \tab 1.0.2\cr
-#'Date: \tab 2016-05-18\cr
+#'Version: \tab 1.0.3\cr
+#'Date: \tab 2016-06-28\cr
 #'License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 #'}
 #'The main function of the kernscr package is \code{\link{compute_all_tests}}

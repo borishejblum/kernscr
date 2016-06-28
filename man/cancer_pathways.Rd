@@ -15,6 +15,7 @@ data("cancer_pathways")
 \examples{
 data("cancer_pathways")
 
+\dontrun{
 ##get the data from Vijver publication
 
 #clinical data
@@ -50,7 +51,6 @@ BC_dat_clin <- BC_dat_clin[-which(BC_dat_clin$ID \%in\% samples2rmv), -col2rmv]
 head(BC_dat_clin)
 
 
-\dontrun{
 
 #import genomics data
 urlPath="http://ccb.nki.nl/data/"

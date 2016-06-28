@@ -10,7 +10,7 @@ citEntry(entry = "Article",
    pages  = "",
    doi    = "",
    url    = "",
-   note   = "R package version 1.0.2",
+   note   = "R package version 1.0.3",
    textVersion = "Neykov M, Hejblum BP and Sinnott JA (2016) Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks. Statistical Methods in Medical Research. In press."
 )
 

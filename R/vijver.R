@@ -19,6 +19,7 @@
 #'@examples
 #'data("cancer_pathways")
 #'
+#'\dontrun{
 #'##get the data from Vijver publication
 #'
 #'#clinical data
@@ -54,7 +55,6 @@
 #'head(BC_dat_clin)
 #'
 #'
-#'\dontrun{
 #'
 #'#import genomics data
 #'urlPath="http://ccb.nki.nl/data/"
