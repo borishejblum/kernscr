@@ -14,15 +14,20 @@ cache:
   - C:\RLibrary
 
 environment:
-  NOT_CRAN: true
-  # env vars that may need to be set, at least temporarily, from time to time
-  # see https://github.com/krlmlr/r-appveyor#readme for details
-  # USE_RTOOLS: true
-  # R_REMOTES_STANDALONE: true
+environment:
+  global:
+    NOT_CRAN: true
+    R_BUILD_ARGS: '--no-manual --no-resave-data'
+    WARNINGS_ARE_ERRORS: 1
+    R_ARCH: x64
+    USE_RTOOLS: true ## to be able to use Remotes (i.e. packages from non-CRAN sources)
 
-# Adapt as necessary starting from here
+  matrix:
+    - R_VERSION: release
+    - R_VERSION: devel
 
 build_script:
+  - travis-tool.sh install_bioc org.Hs.eg.db
   - travis-tool.sh install_deps
 
 test_script:
