@@ -1,8 +1,8 @@
 citHeader("To cite kernscr in publications, please use:")
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
    title  = "Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks",
-   author = c(person("Matey Neykov"), person("Boris P Hejblum"), person("Jennifer A. Sinnott")),
+   author = c(person("Matey", "Neykov"), person(c("Boris", "P"), "Hejblum"), person(c("Jennifer", "A"), "Sinnott")),
    journal = "Statistical Methods in Medical Research",
    year   = "2018",
    volume = "27",
