@@ -79,12 +79,14 @@ BC_dat_exp_all <- cbind.data.frame("SYMBOL"=gene_symbol, BC_dat_exp[,  BC_dat_cl
 unlink("./temp_unzip", recursive=TRUE)
 
 # translating the pathways from Entrez ID to gene symbol
-library(org.Hs.eg.db)
-x <- org.Hs.egSYMBOL
-mapped_genes <- mappedkeys(x)
-xx <- as.list(x[mapped_genes])
-cancer_pathways_Symbol <- lapply(cancer_pathways, function(v){unlist(xx[v])})
-sapply(cancer_pathways, function(x){length(intersect(x, rownames(BC_dat_exp)))/length(x)})
+if (requireNamespace("org.Hs.eg.db", quietly = TRUE)){
+ library(org.Hs.eg.db)
+ x <- org.Hs.egSYMBOL
+ mapped_genes <- mappedkeys(x)
+ xx <- as.list(x[mapped_genes])
+ cancer_pathways_Symbol <- lapply(cancer_pathways, function(v){unlist(xx[v])})
+ sapply(cancer_pathways, function(x){length(intersect(x, rownames(BC_dat_exp)))/length(x)})
+}
 }
 
 }
