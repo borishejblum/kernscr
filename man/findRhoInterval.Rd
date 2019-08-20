@@ -61,7 +61,7 @@ ind_gene <- c(7:ncol(mydata))
 my_rho_init <- seq(0.01, 20, length=300)*length(ind_gene)
 range(my_rho_init)
 
-\dontrun{
+if(interactive()){
 # compute the interval for rho
 rho_set <- findRhoInterval(tZ=t(mydata[,ind_gene]), rho_init = my_rho_init, kernel="gaussian")
 rho_set

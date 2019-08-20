@@ -19,7 +19,7 @@
 #'@examples
 #'data("cancer_pathways")
 #'
-#'\dontrun{
+#'if(interactive()){
 #'##get the data from Vijver publication
 #'
 #'#clinical data
