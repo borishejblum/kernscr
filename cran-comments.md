@@ -1,5 +1,5 @@
 # This is an update of the kernscr package  
-* a NOTE sometimes appear when the suggested package org.Hs.eg.db is not available 
+* a NOTE sometimes appears when the suggested package org.Hs.eg.db is not available 
 from Bioconductor
 
 ## Test environments  

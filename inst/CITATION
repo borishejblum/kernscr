@@ -10,7 +10,7 @@ bibentry(bibtype = "Article",
    pages  = "1099-1114",
    doi    = "10.1177/0962280216653427",
    url    = "",
-   note   = "R package version 1.0.4",
+   note   = "R package version 1.0.5",
    textVersion = "Neykov M, Hejblum BP and Sinnott JA (2018). Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks. Statistical Methods in Medical Research, 27(4): 1099-1114. <doi: 10.1177/0962280216653427>"
 )
 

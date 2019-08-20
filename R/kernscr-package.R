@@ -6,7 +6,7 @@
 #'\tabular{ll}{
 #'Package: \tab kernscr\cr
 #'Type: \tab Package\cr
-#'Version: \tab 1.0.4\cr
+#'Version: \tab 1.0.5\cr
 #'Date: \tab 2019-08-20\cr
 #'License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 #'}
