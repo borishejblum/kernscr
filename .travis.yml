@@ -6,13 +6,14 @@ os:
 - linux
 - osx
 
-r: 
+r:
 - release
 - devel
 
 r_packages:
 - mvtnorm
 - gdata
+- BiocManager
 
 bioc_packages:
 - org.Hs.eg.db
