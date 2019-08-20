@@ -1,4 +1,4 @@
-#'Ahat computation
+#'\code{Ahat} computation
 #'@keywords internal
 # The idea behind this calculation is:
 # dEN_i(t) is estimated by the mean number of failure times before i.e. multiply by 1/n (typically dN_i(t) = 1 only for 1 out of n times)

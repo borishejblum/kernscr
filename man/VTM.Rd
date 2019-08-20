@@ -18,4 +18,3 @@ a matrix of \code{dm} rows
 Repeats a vector as identical rows of a matrix
 }
 \keyword{internal}
-

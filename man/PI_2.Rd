@@ -10,4 +10,3 @@ PI_2(t, all_times, gamma_vec, U)
 PI_2
 }
 \keyword{internal}
-

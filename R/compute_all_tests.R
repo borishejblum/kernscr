@@ -1,13 +1,13 @@
 #'Testing pathway risk association
 #'
-#'This functions computes p-values frm score tests of genetic pathway risk association in 5 different models
+#'This functions computes p-values \code{frm} score tests of genetic pathway risk association in 5 different models
 #'
 #'@param data a \code{data.frame} of \code{N} rows and set up as the output from \code{\link{sim_SCR_data}} with columns:\itemize{
 #'\item{\code{XR}:}{ time to recurrence / death / censoring}
 #'\item{\code{XD}:}{ time to death / censoring}
-#'\item{\code{DeltaR}:}{ Indicator of censoring (0), recurrence (1), or death (2) for this earliest time XR}
+#'\item{\code{DeltaR}:}{ Indicator of censoring (0), recurrence (1), or death (2) for this earliest time \code{XR}}
 #'\item{\code{DeltaD}:}{ Indicator of censoring (0) or death (1)}
-#'\item{\code{XPFS}:}{ time to recurrence / death / censoring (=XR)}
+#'\item{\code{XPFS}:}{ time to recurrence / death / censoring (=\code{XR})}
 #'\item{\code{DeltaPFS}:}{ Indicator of censoring (0) or recurrence or death, whichever came first (1)}
 #'\item{\code{Z_1,...,Z_P}:}{ genomic variables}
 #'}
@@ -31,11 +31,11 @@
 #'
 #'
 #'@return either a \code{vector} of p-values for 5 different models with names:\itemize{
-#'\item{\code{"SCR"}:}{ Semi-Comperting Risks}
+#'\item{\code{"SCR"}:}{ Semi-Competing Risks}
 #'\item{\code{"PFS"}:}{ Progression Free Survival}
 #'\item{\code{"CR"}:}{ Competing Risks}
 #'\item{\code{"OS"}:}{ Overall Survival}
-#'\item{\code{"SCR_alt"}:}{ SCR allowing different tuning params for the two event time processes}
+#'\item{\code{"SCR_alt"}:}{ SCR allowing different tuning parameters for the two event time processes}
 #'} or else if \code{get_ptb_pvals} is \code{TRUE}, a \code{list} with 2 elements:\itemize{
 #'\item{\code{"obs_pvals"}:}{ a vector containing the observed p-values for each of the 5 models as described above}
 #'\item{\code{"null_pvals_perts"}:}{ a matrix of dimensions \code{num_perts x 5} containing the corresponding

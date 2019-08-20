@@ -5,7 +5,7 @@
 \alias{cancer_pathways}
 \alias{vijver}
 \title{70 pathways from MSigDB c2CP}
-\format{a list of 70 relevant pathways from an old version of MSigDB c2CP contening the Entrez IDs.}
+\format{a list of 70 relevant pathways from an old version of MSigDB c2CP containing the Entrez IDs.}
 \usage{
 data("cancer_pathways")
 }
@@ -98,4 +98,3 @@ Significance of Multiple Genetic Markers for Risk Prediction, \emph{Biometrics},
 67(3):975-986, 2011.
 }
 \keyword{datasets}
-

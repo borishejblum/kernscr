@@ -1,4 +1,4 @@
-#'dM
+#'\code{dM}
 #'@keywords internal
 dM <- function(all_times, failures, gamma_vec, U){
 

@@ -2,12 +2,11 @@
 % Please edit documentation in R/dM.R
 \name{dM}
 \alias{dM}
-\title{dM}
+\title{\code{dM}}
 \usage{
 dM(all_times, failures, gamma_vec, U)
 }
 \description{
-dM
+\code{dM}
 }
 \keyword{internal}
-

@@ -13,4 +13,3 @@ lambda_pert(t, perturb_mat, all_times, failures, gamma_vec, U)
 Lambda and its perturbation
 }
 \keyword{internal}
-

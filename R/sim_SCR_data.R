@@ -15,9 +15,9 @@
 #'@return a \code{data.frame} with columns:\itemize{
 #'\item{\code{XR}:}{ time to recurrence / death / censoring}
 #'\item{\code{XD}:}{ time to death / censoring}
-#'\item{\code{DeltaR}:}{ Indicator of censoring (0), recurrence (1), or death (2) for this earliest time XR}
+#'\item{\code{DeltaR}:}{ Indicator of censoring (0), recurrence (1), or death (2) for this earliest time \code{XR}}
 #'\item{\code{DeltaD}:}{ Indicator of censoring (0) or death (1)}
-#'\item{\code{XPFS}:}{ time to recurrence / death / censoring (=XR)}
+#'\item{\code{XPFS}:}{ time to recurrence / death / censoring (=\code{XR})}
 #'\item{\code{DeltaPFS}:}{ Indicator of censoring (0) or recurrence or death, whichever came first (1)}
 #'\item{\code{Z_1,...,Z_P}:}{ genomic variables}
 #'}

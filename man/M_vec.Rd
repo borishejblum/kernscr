@@ -15,4 +15,3 @@ M vector and its perturbation
 M vector perturbation
 }
 \keyword{internal}
-

@@ -14,7 +14,7 @@
 #'
 #'@usage data("cancer_pathways")
 #'
-#'@format a list of 70 relevant pathways from an old version of MSigDB c2CP contening the Entrez IDs.
+#'@format a list of 70 relevant pathways from an old version of MSigDB c2CP containing the Entrez IDs.
 #'
 #'@examples
 #'data("cancer_pathways")

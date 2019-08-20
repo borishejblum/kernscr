@@ -2,12 +2,11 @@
 % Please edit documentation in R/Ahat.R
 \name{Ahat}
 \alias{Ahat}
-\title{Ahat computation}
+\title{\code{Ahat} computation}
 \usage{
 Ahat(all_times, failures, gamma_vec, U)
 }
 \description{
-Ahat computation
+\code{Ahat} computation
 }
 \keyword{internal}
-

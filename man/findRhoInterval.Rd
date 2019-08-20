@@ -2,7 +2,7 @@
 % Please edit documentation in R/findRhoInterval.R
 \name{findRhoInterval}
 \alias{findRhoInterval}
-\title{Find an interval contraining the rho parameter for a non linear kernel}
+\title{Find an interval constraining the rho parameter for a non linear kernel}
 \usage{
 findRhoInterval(tZ, rho_init = seq(0.01, 20, length = 300) * nrow(tZ),
   kernel = c("gaussian", "poly"), d = NA, rate_range = c(1.5, 4),
@@ -25,18 +25,18 @@ Default is \code{NA}.}
 \item{pca_thres}{a number between \code{0} and \code{1} giving the threshold to be used for PCA.
 Default is \code{0.9}. If \code{NULL}, no PCA is performed.}
 
-\item{warning_suppress}{logical flag. Indicating wether the warnings should be suppress during
+\item{warning_suppress}{logical flag. Indicating whether the warnings should be suppress during
 the linear model fitting step. Default is \code{TRUE}. See details.}
 }
 \value{
 an upper and lower bound to look for rho
 }
 \description{
-Find an interval contraining the rho parameter for a non linear kernel
+Find an interval constraining the rho parameter for a non linear kernel
 }
 \details{
 This function will print \code{rho_init} range and the range of valid tuning parameters.
-If that range butts up against either the upper or lower bound of rho_init, you can rerun this function
+If that range butts up against either the upper or lower bound of \code{rho_init}, you can rerun this function
 with a bigger \code{rho_init}.
 
 Finding the right tuning parameters includes a step of fitting a linear model which can fail
@@ -71,4 +71,3 @@ range(my_rho_init) # good to check that the interval produced here is strictly c
 #rhos <- exp(seq(log(rho_set[1]),log(rho_set[2]), length=50))
 }
 }
-
