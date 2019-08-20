@@ -14,7 +14,6 @@ cache:
   - C:\RLibrary
 
 environment:
-environment:
   global:
     NOT_CRAN: true
     R_BUILD_ARGS: '--no-manual --no-resave-data'
