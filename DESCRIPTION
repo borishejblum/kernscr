@@ -5,7 +5,7 @@ Version: 1.0.4
 Date: 2019-08-20
 Authors@R: c(person("Matey", "Neykov", role = c("aut"),
     email = "mneykov@gmail.com"),
-    person(c("Boris","P"), "Hejblum", role = c("aut", "cre"),
+    person(c("Boris", "P"), "Hejblum", role = c("aut", "cre"),
     email = "boris.hejblum@u-bordeaux.fr"),
     person(c("Jennifer", "A"), "Sinnot", role = c("aut"),
     email = "jsinnott@stat.osu.edu")
