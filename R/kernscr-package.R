@@ -7,7 +7,7 @@
 #'Package: \tab kernscr\cr
 #'Type: \tab Package\cr
 #'Version: \tab 1.0.4\cr
-#'Date: \tab 2019-08-19\cr
+#'Date: \tab 2019-08-20\cr
 #'License:\tab \href{http://www.gnu.org/licenses/gpl-2.0.txt}{GPL-2}\cr
 #'}
 #'The main function of the kernscr package is \code{\link{compute_all_tests}}

@@ -24,7 +24,7 @@ for Pathway Analysis in the Presence of Semi-Competing Risks.
 ## Installation
 
 You can install the released version of kernscr from
-[CRAN](https://CRAN.R-project.org) with:
+[CRAN](https://CRAN.R-project.org/package=kernscr) with:
 
 ``` r
 install.packages("kernscr")

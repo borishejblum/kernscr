@@ -26,7 +26,7 @@ Neykov M, Hejblum BP and Sinnott JA (2018). Kernel Machine Score Test for Pathwa
 
 ## Installation
 
-You can install the released version of kernscr from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of kernscr from [CRAN](https://CRAN.R-project.org/package=kernscr) with:
 
 ``` r
 install.packages("kernscr")
