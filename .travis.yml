@@ -1,6 +1,7 @@
 language: R
 cache: packages
 sudo: false
+use_bioc: true
 
 os:
 - linux
@@ -16,8 +17,10 @@ r_packages:
 - BiocManager
 - DBI
 - plogr
+- RSQLite
 
 bioc_packages:
+- AnnotationDbi
 - org.Hs.eg.db
 
 r_build_args: "--html"
