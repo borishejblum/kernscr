@@ -4,14 +4,15 @@ citEntry(entry = "Article",
    title  = "Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks",
    author = c(person("Matey Neykov"), person("Boris P Hejblum"), person("Jennifer A. Sinnott")),
    journal = "Statistical Methods in Medical Research",
-   year   = "2016",
-   volume = "in press",
-   number = "",
-   pages  = "",
-   doi    = "",
+   year   = "2018",
+   volume = "27",
+   number = "4",
+   pages  = "1099-1114",
+   doi    = "10.1177/0962280216653427",
    url    = "",
-   note   = "R package version 1.0.3",
-   textVersion = "Neykov M, Hejblum BP and Sinnott JA (2016) Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks. Statistical Methods in Medical Research. In press."
+   note   = "R package version 1.0.4",
+   textVersion = "Neykov M, Hejblum BP and Sinnott JA (2018). Kernel Machine Score Test for Pathway Analysis in the Presence of Semi-Competing Risks. Statistical Methods in Medical Research, 27(4): 1099-1114. <doi: 10.1177/0962280216653427>"
 )
 
-citFooter("We have invested a lot of time and effort in implementing kernscr, ", "please cite it when using it for data analysis or research.")
+citFooter("We have invested a lot of time and effort in implementing kernscr, ",
+   "please cite it when using it for data analysis or research.")
