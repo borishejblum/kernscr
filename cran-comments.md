@@ -3,17 +3,11 @@
 from Bioconductor
 
 ## Test environments  
-* local macOS 10.12.6 install, R 3.6.1
-* macOS 10.13.3 (on travis-ci), R devel and release
-* ubuntu 16.04.6 (on travis-ci), R devel and release
-* Windows Visual Studio 2015 (on appveyor), R devel and release
+* local macOS 12.2.1 install, R 4.1.2
+* Linux (Ubuntu 20.04), macOS (11.6) and Windows (Server 2019 10.0), R devel and release (through GitHub Actions)
 
 ## R CMD check results  
 0 errors | 0 warnings | 1 note
-
-* as I have changed institution since the last release, maintainer email has been
-updated (I will be able to confirm as I still have access to the old email address
-for now)
 
 ## Reverse dependencies  
 There are no reverse dependencies.
