@@ -1,6 +1,9 @@
 News about the R package kernscr:
 --------------------------------
 
+Main changes in Version 1.0.6 (2023-04-17) - this is only a minor release:
+* `gdata`suggestion replaced by `readxl`
+
 Main changes in Version 1.0.4 (2019-08-20) - this is only a minor release:
 * Documentation and CITATION updated
 * CI added

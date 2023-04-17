@@ -4,9 +4,18 @@
 \alias{compute_all_tests}
 \title{Testing pathway risk association}
 \usage{
-compute_all_tests(data, ind_gene = 7:ncol(data), num_perts = 1000,
-  Ws = NULL, rho = NA, kernel = c("linear", "gaussian", "poly"),
-  d = 2, pca_thres = 0.9, get_ptb_pvals = FALSE, ...)
+compute_all_tests(
+  data,
+  ind_gene = 7:ncol(data),
+  num_perts = 1000,
+  Ws = NULL,
+  rho = NA,
+  kernel = c("linear", "gaussian", "poly"),
+  d = 2,
+  pca_thres = 0.9,
+  get_ptb_pvals = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{a \code{data.frame} of \code{N} rows and set up as the output from \code{\link{sim_SCR_data}} with columns:\itemize{

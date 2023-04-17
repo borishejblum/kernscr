@@ -5,7 +5,9 @@
 \alias{cancer_pathways}
 \alias{vijver}
 \title{70 pathways from MSigDB c2CP}
-\format{a list of 70 relevant pathways from an old version of MSigDB c2CP containing the Entrez IDs.}
+\format{
+a list of 70 relevant pathways from an old version of MSigDB c2CP containing the Entrez IDs.
+}
 \usage{
 data("cancer_pathways")
 }
@@ -24,13 +26,13 @@ import_xls_from_zip <- function(urlPath, filename, zipname, skip=0){
  download.file(paste0(urlPath, zipFile), zipFile)
  unzip(zipFile, exdir="./temp_unzip")
  xlsFile <- paste0("./temp_unzip/", filename, ".xls")
- res <- gdata::read.xls(xlsFile, skip=skip)
+ res <- readxl::read_xls(xlsFile, skip=skip)
  unlink(zipFile)
  unlink("./temp_unzip", recursive=TRUE)
  return(res)
 }
 
-BC_dat_clin <- import_xls_from_zip(urlPath="http://ccb.nki.nl/data/",
+BC_dat_clin <- import_xls_from_zip2(urlPath="http://ccb.nki.nl/data/",
                                   filename="Table1_ClinicalData_Table",
                                   zipname="nejm_table1",
                                   skip=2

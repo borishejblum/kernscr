@@ -1,8 +1,8 @@
 Package: kernscr
 Type: Package
 Title: Kernel Machine Score Test for Semi-Competing Risks
-Version: 1.0.5
-Date: 2019-08-20
+Version: 1.0.6
+Date: 2023-04-17
 Authors@R: c(person("Matey", "Neykov", role = c("aut"),
     email = "mneykov@gmail.com"),
     person(c("Boris", "P"), "Hejblum", role = c("aut", "cre"),
@@ -22,10 +22,10 @@ Imports:
     mvtnorm,
     stats
 Suggests:
-    gdata,
+    readxl,
     org.Hs.eg.db
 License: GPL-2 | file LICENSE
 LazyData: TRUE
 BugReports: https://github.com/borishejblum/kernscr/issues
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.3

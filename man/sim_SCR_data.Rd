@@ -4,8 +4,17 @@
 \alias{sim_SCR_data}
 \title{Data Simulation Function}
 \usage{
-sim_SCR_data(data_size, ncol_gene_mat, feat_m, feat_d, mu_cen, cov,
-  lam_m = 1/15, lam_d = 1/20, norm_vcov = c(1, 0.5, 0.5, 1))
+sim_SCR_data(
+  data_size,
+  ncol_gene_mat,
+  feat_m,
+  feat_d,
+  mu_cen,
+  cov,
+  lam_m = 1/15,
+  lam_d = 1/20,
+  norm_vcov = c(1, 0.5, 0.5, 1)
+)
 }
 \arguments{
 \item{data_size}{an integer giving the simulated sample size \code{N}}
