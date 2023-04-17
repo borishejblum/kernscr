@@ -7,7 +7,7 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/kernscr)](https://CRAN.R-project.org/package=kernscr)
-[![R-CMD-check](https://github.com/borishejblum/kernscr/workflows/R-CMD-check/badge.svg)](https://github.com/borishejblum/kernscr/actions)
+[![R-CMD-check](https://github.com/borishejblum/kernscr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/borishejblum/kernscr/actions/workflows/R-CMD-check.yaml)
 [![Downloads](https://cranlogs.r-pkg.org/badges/kernscr?color=blue)](https://www.r-pkg.org/pkg/kernscr)
 <!-- badges: end -->
 
