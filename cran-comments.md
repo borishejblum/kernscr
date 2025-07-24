@@ -3,8 +3,8 @@
 from Bioconductor
 
 ## Test environments  
-* local macos 12.6.3 install, R 4.2.3
-* Linux (Ubuntu 22.04), macOS (12.6) and Windows (Server 2022 10.0), R devel and release (through GitHub Actions)
+* local R installation, R 4.4.3
+* Linux (Ubuntu 24.04), macOS (14.7) and Windows (Server 2022 10.0), R devel and release (through GitHub Actions)
 
 ## R CMD check results  
 0 errors | 0 warnings | 1 note
