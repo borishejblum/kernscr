@@ -23,6 +23,14 @@ Neykov M, Hejblum BP, Sinnot JA, Kernel Machine Score Test for
 Pathway Analysis in the Presence of Semi-Competing Risks, \emph{Stat Methods in Med Res},
 , 27(4): 1099-1114 (2018). <doi: 10.1177/0962280216653427>.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{http://borishejblum.github.io/kernscr/}
+  \item Report bugs at \url{https://github.com/borishejblum/kernscr/issues}
+}
+
+}
 \author{
 Matey Neykov, Boris P. Hejblum, Jennifer A. Sinnott
 --- Maintainer: Boris P. Hejblum

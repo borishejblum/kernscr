@@ -28,4 +28,5 @@ License: GPL-2 | file LICENSE
 LazyData: TRUE
 BugReports: https://github.com/borishejblum/kernscr/issues
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
+URL: http://borishejblum.github.io/kernscr/

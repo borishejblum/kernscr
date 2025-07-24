@@ -12,7 +12,7 @@
 #'@param lam_d baseline hazard constant for death process. Default is \code{1/20}.
 #'@param norm_vcov vector of length 4 of correlation between errors between the two processes on
 #'the normal scale before being complementary-log-log-transformed. Default is \code{c(1,.5,.5,1)}.
-#'@return a \code{data.frame} with columns:\itemize{
+#'@returns a \code{data.frame} with columns:
 #'\item{\code{XR}:}{ time to recurrence / death / censoring}
 #'\item{\code{XD}:}{ time to death / censoring}
 #'\item{\code{DeltaR}:}{ Indicator of censoring (0), recurrence (1), or death (2) for this earliest time \code{XR}}
@@ -20,7 +20,6 @@
 #'\item{\code{XPFS}:}{ time to recurrence / death / censoring (=\code{XR})}
 #'\item{\code{DeltaPFS}:}{ Indicator of censoring (0) or recurrence or death, whichever came first (1)}
 #'\item{\code{Z_1,...,Z_P}:}{ genomic variables}
-#'}
 #'
 #'@importFrom mvtnorm rmvnorm
 #'@importFrom stats pnorm rexp

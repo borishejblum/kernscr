@@ -23,4 +23,4 @@
 #'@name kernscr-package
 #'@aliases kernscr
 #'
-NULL
+"_PACKAGE"
