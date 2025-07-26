@@ -1,6 +1,6 @@
 # This is an update of the kernscr package  
 * a NOTE sometimes appears when the suggested package org.Hs.eg.db is not available 
-from Bioconductor
+from Bioconductor. All other NOTES from cran check have been fixed.
 
 ## Test environments  
 * local R installation, R 4.4.3

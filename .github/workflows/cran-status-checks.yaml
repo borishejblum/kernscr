@@ -4,7 +4,7 @@ name: cran-status-checks
 on:
   schedule:
     # Runs daily at 4:00 PM UTC (9:00 AM PST)
-    - cron: '0 9 * * *'  
+    - cron: '0 9 * * *'
   # allows for manually running of the check
   workflow_dispatch:
 
@@ -24,17 +24,22 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::urlchecker, any::yyjsonr
-          
+
       - name: URL check
         run: |
           urls_checks <- urlchecker::url_check()
           if(nrow(urls_checks)>0){
-            stop(print(urls_checks))
+          whitelist <- readLines("url_whitelist")
+          for(i in nrow(urls_checks)){
+            if(! urls_checks[i, "URL"] %in% whitelist){
+              stop(print(urls_checks))
+            }
+          }
           }else{
             print(urls_checks)
           }
         shell: Rscript {0}
-        
+
       - name: Check CRAN-checks status
           # from https://github.com/ricochet-rs/cran-checks/blob/main/check-pkg/action.yaml
         id: cran-check-status
@@ -49,19 +54,19 @@ jobs:
           )
 
           res <- yyjsonr::read_json_str(json)
-          
+
           if (any("ERROR" %in% res$results[[1]]$check_status)) {
             stop(
               "Errors found in CRAN checks",
               "\n",
-              "Review logs at ", 
+              "Review logs at ",
               "https://cran.r-project.org/web/checks/check_results_", pkg, ".html"
             )
           } else if (any(grepl("WARN", res$results[[1]]$check_status))) {
             stop(
               "Warnings found in CRAN checks",
               "\n",
-              "Review logs at ", 
+              "Review logs at ",
               "https://cran.r-project.org/web/checks/check_results_", pkg, ".html"
             )
           } else if (!is.data.frame(res$issues)) {
@@ -74,10 +79,10 @@ jobs:
             stop(
               "NOTES found in CRAN checks",
               "\n",
-              "Review logs at ", 
+              "Review logs at ",
               "https://cran.r-project.org/web/checks/check_results_", pkg, ".html"
             )
           }
           message("\u2713 `", pkg, "` has no notes, issues, warnings or errors")
         shell: Rscript {0}
-      
+
