@@ -9,4 +9,4 @@
 ^docs$
 ^pkgdown$
 ^CRAN-SUBMISSION$
-^url_whitelist
+^url_whitelist$
